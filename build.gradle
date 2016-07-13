@@ -1,20 +1,23 @@
 group 'zhangzhihao'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-apply plugin: 'war'
+apply plugin: "java"
+apply plugin: "war"
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-def SpringVersion = "4.3.1.BUILD-SNAPSHOT"
-def SpringBootVersion="1.3.5.RELEASE"
-def HibernateVersion = "5.2.0.Final"
+def SpringVersion = "4.3.1.RELEASE"
+def SpringBootVersion = "1.3.6.RELEASE"
+def HibernateVersion = "5.2.1.Final"
+def ShiroVersion = "1.2.5"
+def JacksonVersion = "2.7.4"
 
 
 repositories {
-    maven { url "http://maven.oschina.net/content/groups/public/" }
     mavenLocal()
-    mavenCentral()
     maven { url "http://repo.spring.io/release" }
+    maven { url "http://maven.oschina.net/content/groups/public/" }
+    mavenCentral()
     maven { url "https://repo.spring.io/libs-snapshot" }
 }
 
@@ -22,6 +25,7 @@ dependencies {
     compile(
             // spring framework
             "org.springframework:spring-context:${SpringVersion}",
+            "org.springframework:spring-context-support:${SpringVersion}",//启用ehcache缓存
             "org.springframework:spring-web:${SpringVersion}",
             "org.springframework:spring-webmvc:${SpringVersion}",
             "org.springframework:spring-test:${SpringVersion}",
@@ -40,24 +44,70 @@ dependencies {
             "javax.servlet:javax.servlet-api:3.1.0",
 
             //apache
-            "commons-fileupload:commons-fileupload:1.3.1",
+            "commons-fileupload:commons-fileupload:1.3.2",
+            "org.apache.commons:commons-lang3:3.4",//深拷贝
+
+            //jstl
+            "javax.servlet:jstl:1.2",
 
             // JSON
+            // "com.alibaba:fastjson:1.2.6",
+            "com.fasterxml.jackson.core:jackson-core:${JacksonVersion}",
+            "com.fasterxml.jackson.core:jackson-databind:${JacksonVersion}",
+            "com.fasterxml.jackson.core:jackson-annotations:${JacksonVersion}",
 
+            //MyBatis
+            // "org.mybatis:mybatis:3.4.0",
+            // "org.mybatis:mybatis-spring:1.3.0",
+
+            //Hibernate 5.2.0.Final有一个bug
             "org.hibernate:hibernate-core:${HibernateVersion}",
+            "org.hibernate:hibernate-validator:5.2.4.Final",
 
             //JPA
-            "org.hibernate:hibernate-entitymanager:5.1.0.Final",
+            //"org.hibernate:hibernate-entitymanager:${HibernateVersion}",
 
             //C3P0
             "c3p0:c3p0:0.9.1.2",
             "org.hibernate:hibernate-c3p0:${HibernateVersion}",
 
             //ehcache
-            "net.sf.ehcache:ehcache-core:2.6.11",
+            //"net.sf.ehcache:ehcache-core:2.6.11",旧版
+            "org.ehcache:ehcache:3.1.0",
             "org.hibernate:hibernate-ehcache:${HibernateVersion}",
 
+            //jUnit
+            "junit:junit:4.12",
+
+            //@NotNull
+            "org.jetbrains:annotations:15.0",
+
+            //sl4j
+            //"org.slf4j:slf4j-log4j12:1.7.21",
+            //"org.slf4j:slf4j-jdk14:1.7.21",
+            "org.slf4j:jcl-over-slf4j:1.7.21",//jcl-over-slf4j 把 Commons-Logging 桥接到 Slf4J，然后 Logback。
+            "ch.qos.logback:logback-core:1.1.7",
+            "ch.qos.logback:logback-classic:1.1.7",
+
+            //shiro
+            //"org.apache.shiro:shiro-core:${ShiroVersion}",
+            //"org.apache.shiro:shiro-spring:${ShiroVersion}",
+            //"org.apache.shiro:shiro-web:${ShiroVersion}",
+            //"org.apache.shiro:shiro-ehcache:${ShiroVersion}",
+
+    )
+    testCompile(
+            //jUnit
             "junit:junit:4.12",
     )
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task copyJars(type: Copy) {
+    from configurations.runtime
+    into "lib" //复制到lib目录
+}
+
+//让gradle支持中文
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }

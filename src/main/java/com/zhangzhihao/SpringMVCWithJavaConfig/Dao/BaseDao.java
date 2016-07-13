@@ -2,19 +2,15 @@ package com.zhangzhihao.SpringMVCWithJavaConfig.Dao;
 
 
 import com.zhangzhihao.SpringMVCWithJavaConfig.Utils.PageResults;
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.SerializationUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Primary;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,51 +20,57 @@ import java.util.List;
  *
  * @param <T> 实体类型
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
-@Transactional(timeout = 1)
+@SuppressWarnings({"unchecked"})
+@Transactional(timeout = 5)
+//, isolation = Isolation.READ_COMMITTED)加上这个注释@NotNull会失效
+// propagation = Propagation.REQUIRES_NEW,加上注释的这句单元测试不会回滚，事务失效
 @Repository
 @Primary
 public class BaseDao<T> {
 
-	@Autowired
-	private HibernateTemplate hibernateTemplate;
+	//获取到和当前事务关联的 EntityManager 对象
+	//实际上是获得EntityManager的代理对象，是线程安全的
+	@PersistenceContext
+	private EntityManager entityManager;
 
+
+	/**
+	 * 这个实体是否存在在数据库
+	 *
+	 * @param model 实体
+	 * @return 是否存在
+	 */
+	public boolean contains(@NotNull final T model) {
+		return entityManager.contains(model);
+	}
+
+	/**
+	 * 使实体变为不受管理的状态
+	 *
+	 * @param model 实体
+	 */
+	public void detach(@NotNull final T model) {
+		entityManager.detach(model);
+	}
 
 	/**
 	 * 保存对象
 	 *
 	 * @param model 需要添加的对象
-	 * @return 是否添加成功
 	 */
-	public Boolean save(final T model) {
-		Serializable save = hibernateTemplate.save(model);
-		if (save != null) {
-			return true;
-		} else {
-			return false;
-		}
+	public void save(@NotNull final T model) {
+		entityManager.persist(model);
 	}
 
 	/**
-	 * 添加并且返回Integer类型的ID
+	 * 批量保存对象
 	 *
-	 * @param model 需要添加的对象
-	 * @return Integer类型的ID
+	 * @param modelList 需要增加的对象的集合
+	 *                  失败会抛异常
 	 */
-	public Integer saveAndGetIntegerID(final T model) {
-		return (Integer) hibernateTemplate.save(model);
+	public void saveAll(@NotNull final List<T> modelList) {
+		modelList.forEach(entityManager::persist);
 	}
-
-	/**
-	 * 添加并且返回String类型的ID
-	 *
-	 * @param model 需要添加的对象
-	 * @return String类型的ID
-	 */
-	public String saveAndGetStringID(final T model) {
-		return (String) hibernateTemplate.save(model);
-	}
-
 
 	/**
 	 * 删除对象
@@ -76,8 +78,8 @@ public class BaseDao<T> {
 	 * @param model 需要删除的对象
 	 *              失败会抛异常
 	 */
-	public void delete(final T model) {
-		hibernateTemplate.delete(model);
+	public void delete(@NotNull final T model) {
+		entityManager.remove(entityManager.contains(model) ? model : entityManager.merge(model));
 	}
 
 	/**
@@ -86,8 +88,8 @@ public class BaseDao<T> {
 	 * @param modelList 需要删除的对象的集合
 	 *                  失败会抛异常
 	 */
-	public void deleteAll(final List<T> modelList) {
-		modelList.stream().forEach(hibernateTemplate::delete);
+	public void deleteAll(@NotNull final List<T> modelList) {
+		modelList.forEach(this::delete);
 	}
 
 	/**
@@ -97,29 +99,28 @@ public class BaseDao<T> {
 	 * @param id         需要删除的对象的id
 	 *                   失败抛出异常
 	 */
-	public void deleteById(final Class<T> modelClass, Serializable id) {
-		hibernateTemplate.delete(this.getById(modelClass, id));
+	public void deleteById(final Class<T> modelClass, @NotNull final Serializable id) {
+		this.delete(this.getById(modelClass, id));
 	}
 
 	/**
-	 * 更新对象
+	 * 更新或保存对象
 	 *
 	 * @param model 需要更新的对象
 	 *              失败会抛出异常
 	 */
-	public void update(final T model) {
-		hibernateTemplate.update(model);
+	public void saveOrUpdate(@NotNull final T model) {
+		entityManager.merge(model);
 	}
 
-
 	/**
-	 * 添加或者更新
+	 * 批量更新或保存对象
 	 *
-	 * @param model 需要更新或添加的对象
-	 *              失败会抛出异常
+	 * @param modelList 需要更新或保存的对象
+	 *                  失败会抛出异常
 	 */
-	public void saveOrUpdate(final T model) {
-		hibernateTemplate.saveOrUpdate(model);
+	public void saveOrUpdateAll(@NotNull final List<T> modelList) {
+		modelList.forEach(entityManager::merge);
 	}
 
 	/**
@@ -130,8 +131,8 @@ public class BaseDao<T> {
 	 * @return model
 	 */
 	@Transactional(readOnly = true)
-	public T getById(Class<T> modelClass, final Serializable id) {
-		return hibernateTemplate.get(modelClass, id);
+	public T getById(Class<T> modelClass, @NotNull final Serializable id) {
+		return entityManager.find(modelClass, id);
 	}
 
 	/**
@@ -141,8 +142,11 @@ public class BaseDao<T> {
 	 * @return List
 	 */
 	@Transactional(readOnly = true)
-	public List<T> loadAll(Class<T> modelClass) {
-		return hibernateTemplate.loadAll(modelClass);
+	public List<T> getAll(Class<T> modelClass) {
+		Query query = new Query(modelClass, entityManager);
+		return query
+				.createTypedQuery()
+				.getResultList();
 	}
 
 
@@ -155,120 +159,189 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public List<T> getListByPage(Class<T> modelClass,final  Integer currentPageNumber,final  Integer pageSize) {
+	public List<T> getListByPage(Class<T> modelClass,
+	                             @NotNull final Integer currentPageNumber,
+	                             @NotNull final Integer pageSize) {
 		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
-		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
-		criteria.setFirstResult((currentPageNumber - 1) * pageSize);
-		criteria.setMaxResults(pageSize);
-		return criteria.list();
+		Query query = new Query(modelClass, entityManager);
+		return query
+				.createTypedQuery()
+				.setFirstResult((currentPageNumber - 1) * pageSize)
+				.setMaxResults(pageSize)
+				.getResultList();
 	}
 
-
 	/**
-	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
+	 * 按条件分页
 	 *
-	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
-	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
-	 * @param orders            查询后记录的排序条件,由Order对象生成
-	 * @param projections       分组和聚合查询条件
+	 * @param query             封装的查询条件
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public PageResults<T> getListByPageAndRule(Class<T> modelClass, Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
-	                                           final Projection[] projections) {
-		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
-		//添加条件
-		if (criterions != null && criterions.length > 0) {
-			for (int i = 0; i < criterions.length; i++) {
-				criteria.add(criterions[i]);
-			}
-		}
-		//添加排序
-		if (orders != null && orders.length > 0) {
-			for (int i = 0; i < orders.length; i++) {
-				criteria.addOrder(orders[i]);
-			}
-		}
-		//添加分组统计
-		if (projections != null && projections.length > 0) {
-			for (int i = 0; i < projections.length; i++) {
-				criteria.setProjection(projections[i]);
-			}
-		}
-
-		//参数验证
-		int totalCount = getCountByRule(modelClass, criterions);
+	public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
+												@NotNull Integer pageSize,
+												@NotNull Query query)
+			throws Exception {
+		//获得符合条件的总数目
+		//int totalCount = getCountByQuery((Query) query.deepClone());
+		int totalCount = getCountByQuery(SerializationUtils.clone(query));
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 				: totalCount / pageSize + 1;
+
 		if (currentPageNumber > pageCount && pageCount != 0) {
 			currentPageNumber = pageCount;
 		}
-
+		TypedQuery typedQuery = query.createTypedQuery();
 		//查看是否要分页
-		if (currentPageNumber >= 0 && pageSize >= 0) {
-			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
-			criteria.setMaxResults(pageSize);
+		if (currentPageNumber > 0 && pageSize > 0) {
+			typedQuery
+					.setFirstResult((currentPageNumber - 1) * pageSize)
+					.setMaxResults(pageSize);
 		}
-		return new PageResults<T>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, criteria.list());
+		List<T> list = typedQuery.getResultList();
+		return new PageResults<>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
 	}
 
+	/**
+	 * 获得数量 利用Count(*)实现
+	 *
+	 * @param modelClass 类型，比如User.class
+	 * @return 数量
+	 */
+	@Transactional(readOnly = true)
+	public int getCount(Class<T> modelClass) {
+		Query query = new Query(modelClass, entityManager);
+		return getCountByQuery(query);
+	}
 
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param modelClass 类型，比如User.class
-	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
+	 * @param query 查询条件
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByRule(Class<T> modelClass, final Criterion[] criterions) {
-		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
-		//添加条件
-		if (criterions != null && criterions.length > 0) {
-			for (int i = 0; i < criterions.length; i++) {
-				criteria.add(criterions[i]);
-			}
-		}
-		criteria.setProjection(Projections.rowCount());
-		long uniqueResult = 0;
-		try {
-			uniqueResult = (long) criteria.uniqueResult();
-		} catch (Exception ex) {
-			uniqueResult = 0;
-		}
-		return (int) uniqueResult;
+	public int getCountByQuery(@NotNull final Query query) {
+		return Integer.parseInt(
+				query.selectCount()
+						.createTypedQuery()
+						.getSingleResult()
+						.toString()
+		);
 	}
-
 
 	/**
 	 * 执行Sql语句
 	 *
-	 * @param sqlString sql
-	 * @param values    不定参数数组
+	 * @param sql    sql
+	 * @param values 不定参数数组
 	 * @return 受影响的行数
 	 */
-	public int executeSql(String sqlString, Object... values) {
-		Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
-		SQLQuery sqlQuery = session.createSQLQuery(sqlString);
-		if (values != null) {
-			for (int i = 0; i < values.length; i++) {
-				sqlQuery.setParameter(i, values[i]);
-			}
+	public int executeSql(@NotNull String sql, @NotNull final Object... values) {
+		javax.persistence.Query nativeQuery = entityManager.createNativeQuery(sql);
+		for (int i = 1; i <= values.length; i++) {
+			nativeQuery.setParameter(i, values[i - 1]);
 		}
-		return sqlQuery.executeUpdate();
+		return nativeQuery.executeUpdate();
+	}
+
+	/**
+	 * 通过jpql查询
+	 *
+	 * @param jpql   jpql语句
+	 * @param values 不定参数数组
+	 * @return 返回值
+	 */
+	@Transactional(readOnly = true)
+	public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+		return query.getResultList();
+	}
+
+	/**
+	 * 获得符合对应条件的数量 利用Count(*)实现
+	 *
+	 * @param jpql jpql查询条件
+	 * @return 数量
+	 */
+	@Transactional(readOnly = true)
+	public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+		return query.getResultList().size();
+	}
+
+	/**
+	 * 通过Jpql分页查询
+	 *
+	 * @param currentPageNumber 当前页
+	 * @param pageSize          每页数量
+	 * @param jpql              jpql语句
+	 * @param values            jpql参数
+	 * @return 查询结果
+	 */
+	@Transactional(readOnly = true)
+	public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
+	                                                @NotNull Integer pageSize,
+	                                                @NotNull final String jpql,
+	                                                @NotNull final Object... values) {
+		//参数验证
+		int totalCount = getCountByJpql(jpql, values);
+		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
+				: totalCount / pageSize + 1;
+
+		if (currentPageNumber > pageCount && pageCount != 0) {
+			currentPageNumber = pageCount;
+		}
+
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+
+		//查看是否要分页
+		if (currentPageNumber > 0 && pageSize > 0) {
+			query
+					.setFirstResult((currentPageNumber - 1) * pageSize)
+					.setMaxResults(pageSize);
+		}
+		List<Object> list = query.getResultList();
+		return new PageResults<>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
+	}
+
+	/**
+	 * 执行jpql语句
+	 *
+	 * @param jpql   jpql语句
+	 * @param values 参数
+	 * @return 受影响的行数
+	 */
+	public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+		return query.executeUpdate();
 	}
 
 	/**
 	 * refresh 刷新实体状态
 	 *
-	 * @param t 实体
+	 * @param model 实体
 	 */
-	public void refresh(T t) {
-		hibernateTemplate.refresh(t);
+	public void refresh(@NotNull T model) {
+		entityManager.refresh(model);
 	}
+
+
 }
 
