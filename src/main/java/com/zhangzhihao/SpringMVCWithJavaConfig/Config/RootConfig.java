@@ -12,6 +12,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -104,18 +105,6 @@ public class RootConfig {
         return localContainerEntityManagerFactoryBean;
     }
 
-    /**
-     * 配置 Spring 的声明式事务 配置事务管理器
-     *
-     * @return
-     * @throws PropertyVetoException
-     */
-    @Bean
-    public JpaTransactionManager getTransactionManager() throws PropertyVetoException {
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(getEntityManagerFactory().getObject());
-        return jpaTransactionManager;
-    }
 
     @Bean
     public EhCacheManagerFactoryBean getEhcache() {
@@ -134,4 +123,19 @@ public class RootConfig {
         return ehCacheCacheManager;
     }
 
+    /**
+     * 配置 Spring 事务管理器
+     *
+     * @return
+     */
+    @Bean
+    public PlatformTransactionManager getTransactionManager() {
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        try {
+            jpaTransactionManager.setEntityManagerFactory(getEntityManagerFactory().getObject());
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
+        return jpaTransactionManager;
+    }
 }
