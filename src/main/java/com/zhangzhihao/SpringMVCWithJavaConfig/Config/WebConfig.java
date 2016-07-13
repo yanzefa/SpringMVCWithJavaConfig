@@ -2,7 +2,10 @@ package com.zhangzhihao.SpringMVCWithJavaConfig.Config;
 
 import com.zhangzhihao.SpringMVCWithJavaConfig.Interceptor.AuthInterceptor;
 import com.zhangzhihao.SpringMVCWithJavaConfig.Interceptor.AuthorityByRole;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.ViewResolver;
@@ -15,7 +18,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-@EnableAspectJAutoProxy
 @ComponentScan(basePackages = "com.zhangzhihao.SpringMVCWithJavaConfig",
 		includeFilters =
 				{@ComponentScan.Filter(

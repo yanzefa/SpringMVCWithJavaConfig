@@ -16,7 +16,7 @@ public class LogAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
-    @AfterThrowing(throwing = "ex", pointcut = "execution(* com.zhangzhihao.SpringMVCSeedProject.*.*.*(..)))")
+    @AfterThrowing(throwing = "ex", pointcut = "execution(* com.zhangzhihao.SpringMVCWithJavaConfig.*.*.*(..)))")
     public void LogToDB(JoinPoint joinPoint, Throwable ex) {
         //出错行
         int lineNumber = ex.getStackTrace()[0].getLineNumber();

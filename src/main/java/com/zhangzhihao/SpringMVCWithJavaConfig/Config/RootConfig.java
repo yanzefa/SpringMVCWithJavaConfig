@@ -2,6 +2,7 @@ package com.zhangzhihao.SpringMVCWithJavaConfig.Config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.*;
@@ -19,6 +20,8 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
+@EnableCaching
+@EnableAspectJAutoProxy
 @EnableTransactionManagement
 //@ImportResource("classpath:Spring.xml")
 @PropertySource("classpath:db.properties") //导入资源文件
@@ -130,12 +133,5 @@ public class RootConfig {
         ehCacheCacheManager.setCacheManager(getEhcache().getObject());
         return ehCacheCacheManager;
     }
-
-    /*@Bean
-    public EhCacheCacheManager getCacheManager(){
-        EhCacheCacheManager ehCacheCacheManager=new EhCacheCacheManager();
-        ehCacheCacheManager.setCacheManager(getEhcache());
-        return ehCacheCacheManager;
-    }*/
 
 }
