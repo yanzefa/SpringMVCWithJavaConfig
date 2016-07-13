@@ -37,7 +37,7 @@ public class RootConfig {
     String url;
     @Value("${jdbc.driverClass}")
     String driverClass;
-    @Value("${jdbc.initPoolSize}")
+    @Value("${jdbc.initialPoolSize}")
     Integer initPoolSize;
     @Value("${jdbc.maxPoolSize}")
     Integer maxPoolSize;
