@@ -1,5 +1,8 @@
 package com.zhangzhihao.SpringMVCWithJavaConfig.Model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -11,7 +14,12 @@ import java.util.List;
 @Entity
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Project implements Serializable {
+    private static final long serialVersionUID = 7417435745786587568L;
     @Id
     @NotNull
     private String projectId;
@@ -22,45 +30,4 @@ public class Project implements Serializable {
     @JoinTable(name = "teacher_project", joinColumns = {@JoinColumn(name = "projectId")}, inverseJoinColumns = {@JoinColumn(name = "teacherId")})
     private List<Teacher> teacherList;
 
-    public Project(String projectId, String projectName, List<Teacher> teacherList) {
-        this.projectId = projectId;
-        this.projectName = projectName;
-        this.teacherList = teacherList;
-    }
-
-    public Project() {
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "projectId='" + projectId + '\'' +
-                ", projectName='" + projectName + '\'' +
-                ", teacherList=" + teacherList +
-                '}';
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public List<Teacher> getTeacherList() {
-        return teacherList;
-    }
-
-    public void setTeacherList(List<Teacher> teacherList) {
-        this.teacherList = teacherList;
-    }
 }

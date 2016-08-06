@@ -1,6 +1,9 @@
-package com.zhangzhihao.SpringMVCWithJavaConfig.Dao;
+package com.zhangzhihao.SpringMVCWithJavaConfig.Repository;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.hibernate.query.criteria.internal.predicate.*;
 import org.jetbrains.annotations.NotNull;
@@ -13,20 +16,25 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.mysql.cj.core.util.StringUtils.isNullOrEmpty;
+
 /**
  * Query
  * 封装JPA CriteriaBuilder查询条件
  */
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess", "FieldCanBeLocal"})
+@NoArgsConstructor
 public class Query implements Serializable {
 
     private static final long serialVersionUID = 3366932251068926942L;
 
+    @Setter
     private EntityManager entityManager;
 
     /**
      * 要查询的实体类型
      */
+    @Setter
     private Class clazz;
 
     /**
@@ -36,6 +44,7 @@ public class Query implements Serializable {
      * 查询根实例能通过传入一个实体类型给 AbstractQuery.from方法获得。
      * Criteria查询，可以有多个查询根。
      */
+    @Getter
     private From from;
 
     /**
@@ -43,11 +52,14 @@ public class Query implements Serializable {
      * 过滤条件应用到SQL语句的FROM子句中，
      * 在Criteria 查询中，查询条件通过Predicate 或Expression 实例应用到CriteriaQuery 对象上。
      */
+    @Getter
+    @Setter
     private List<Predicate> predicates;
 
     /**
      * 安全查询主语句
      */
+    @Getter
     private CriteriaQuery criteriaQuery;
 
     /**
@@ -55,21 +67,25 @@ public class Query implements Serializable {
      * CriteriaBuilder是一个工厂对象，安全查询的开始，
      * 用于构建JPA安全查询，创建CriteriaQuery，创建查询具体具体条件Predicate 等。
      */
+    @Getter
     private CriteriaBuilder criteriaBuilder;
 
     /**
      * select条件，用于处理平均值之类的查询
      */
+    @Setter
     private Selection selection;
 
     /**
      * 排序方式列表
      */
+    @Setter
     private List<Order> orders;
 
     /**
      * 查询参数
      */
+    @Setter
     private Map<ParameterExpression, Object> parameters;
 
     /**
@@ -86,9 +102,6 @@ public class Query implements Serializable {
      * 分组条件
      */
     private String groupBy;
-
-    private Query() {
-    }
 
     /**
      * 创建查询条件
@@ -1000,16 +1013,6 @@ public class Query implements Serializable {
     }
 
     /**
-     * 工具方法
-     */
-    private boolean isNullOrEmpty(Object value) {
-        if (value instanceof String)
-            return "".equals(value);
-
-        return value == null;
-    }
-
-    /**
      * 深拷贝
      * 这个方法已弃用，使用<code>SerializationUtils.clone(T object)</code>替代
      *
@@ -1030,69 +1033,15 @@ public class Query implements Serializable {
         return ois.readObject();
     }
 
-    public Class getModelClass() {
-        return this.clazz;
-    }
-
-
-    public Class getClazz() {
-        return this.clazz;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public EntityManager getEntityManager() {
-        return this.entityManager;
-    }
-
-    public void setEntityManager(EntityManager em) {
-        this.entityManager = em;
-    }
-
-    public From getFrom() {
-        return from;
-    }
-
-    public List<Predicate> getPredicates() {
-        return predicates;
-    }
-
-    public void setPredicates(List<Predicate> predicates) {
-        this.predicates = predicates;
-    }
-
-    public CriteriaQuery getCriteriaQuery() {
-        return criteriaQuery;
-    }
-
-    public CriteriaBuilder getCriteriaBuilder() {
-        return criteriaBuilder;
-    }
-
-    public Selection getSelection() {
-        return selection;
-    }
-
-    public void setSelection(Selection selection) {
-        this.selection = selection;
-    }
-
-    public Map<ParameterExpression, Object> getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(Map<ParameterExpression, Object> parameters) {
-        this.parameters = parameters;
-    }
-
+    /**
+     * 这个方法还没有完成
+     *
+     * @param fetchField fetchField
+     * @param fetchMode  fetchMode
+     */
+    @Deprecated
     public void setFetchModes(List<String> fetchField, List<String> fetchMode) {
-
+        //TODO
     }
 
 }

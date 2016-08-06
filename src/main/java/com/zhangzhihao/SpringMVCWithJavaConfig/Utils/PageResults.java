@@ -1,111 +1,97 @@
 package com.zhangzhihao.SpringMVCWithJavaConfig.Utils;
 
 
+import lombok.*;
+
 import java.util.List;
 
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageResults<T> {
-	// 下一页
-	private int nextPage;
+    //上一页
+    @Getter
+    private int previousPage;
 
-	// 当前页
-	private int currentPage;
+    // 当前页
+    @Getter
+    private int currentPage;
 
-	// 每页个个数
-	private int pageSize;
+    // 下一页
+    @Getter
+    private int nextPage;
 
-	// 总条数
-	private int totalCount;
+    // 每页数量
+    @Getter
+    private int pageSize;
 
-	// 总页数
-	private int pageCount;
+    // 总条数
+    @Getter
+    @Setter
+    private int totalCount;
 
-	// 记录
-	private List<T> results;
+    // 总页数
+    @Getter
+    @Setter
+    private int pageCount;
 
-	@Override
-	public String toString() {
-		return "PageResults{" +
-				"nextPage=" + getNextPage() +
-				", currentPage=" + getCurrentPage() +
-				", pageSize=" + getPageSize() +
-				", totalCount=" + getTotalCount() +
-				", pageCount=" + getPageCount() +
-				", results=" + getResults() +
-				'}';
-	}
+    // 记录
+    @Getter
+    @Setter
+    private List<T> results;
 
-	public PageResults(int nextPage, int currentPage, int pageSize, int totalCount, int pageCount, List<T> results) {
-		this.nextPage = nextPage;
-		this.currentPage = currentPage;
-		this.pageSize = pageSize;
-		this.totalCount = totalCount;
-		this.pageCount = pageCount;
-		this.results = results;
-	}
+    public void initPageResults(final int pageSize,
+                                final int totalCount,
+                                final int currentPage) {
+        this.setPageSize(pageSize);
+        this.setTotalCount(totalCount);
+        this.setPageCount(createPageCount());
 
-	public PageResults() {
-	}
 
-	public int getPageCount() {
-		return pageCount;
-	}
+        this.setCurrentPage(currentPage);
+        this.setNextPage(this.getCurrentPage() + 1);
+        this.setPreviousPage(this.getCurrentPage() - 1);
+    }
 
-	public void setPageCount(int pageCount) {
-		this.pageCount = pageCount;
-	}
+    public void setPreviousPage(int previousPage) {
+        if (previousPage <= 0 || pageCount == 0) {
+            this.previousPage = 1;
+        } else {
+            this.previousPage = previousPage;
+        }
+    }
 
-	public int getNextPage() {
-		if (nextPage <= 0) {
-			return 1;
-		} else {
-			if (nextPage > pageCount && pageCount != 0) {
-				nextPage = pageCount;
-			} else if (nextPage > pageCount && pageCount == 0) {
-				nextPage = 1;
-			}
-			return nextPage;
-		}
-	}
+    public void setNextPage(int nextPage) {
+        if (nextPage <= 0 || pageCount == 0) {
+            this.nextPage = 1;
+        } else {
+            if (nextPage > pageCount && pageCount > 0) {
+                this.nextPage = pageCount;
+            } else {
+                this.nextPage = nextPage;
+            }
+        }
+    }
 
-	public void setNextPage(int nextPageNumber) {
-		this.nextPage = nextPageNumber;
-	}
+    public void setCurrentPage(int currentPage) {
+        if (currentPage <= 0 || pageCount == 0) {
+            this.currentPage = 1;
+        } else {
+            if (currentPage > pageCount && pageCount > 0) {
+                this.currentPage = pageCount;
+            } else {
+                this.currentPage = currentPage;
+            }
+        }
+    }
 
-	public List<T> getResults() {
-		return results;
-	}
+    //默认每页十条
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize <= 0 ? 10 : pageSize;
+    }
 
-	public void setResults(List<T> results) {
-		this.results = results;
-	}
-
-	public int getCurrentPage() {
-		return currentPage;
-	}
-
-	public void setCurrentPage(int currentPage) {
-		this.currentPage = currentPage;
-	}
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize <= 0 ? 10 : pageSize;
-	}
-
-	public int getTotalCount() {
-		return totalCount;
-	}
-
-	public void setTotalCount(int totalCount) {
-		this.totalCount = totalCount;
-	}
-
-	public void resetPageNumber() {
-		nextPage = currentPage + 1;
-		pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
-				: totalCount / pageSize + 1;
-	}
+    public int createPageCount() {
+        return totalCount % pageSize == 0 ? totalCount / pageSize
+                : totalCount / pageSize + 1;
+    }
 }

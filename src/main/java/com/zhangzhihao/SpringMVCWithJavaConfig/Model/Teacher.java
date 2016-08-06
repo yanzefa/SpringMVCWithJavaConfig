@@ -1,5 +1,8 @@
 package com.zhangzhihao.SpringMVCWithJavaConfig.Model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,7 +15,12 @@ import java.util.List;
 @Entity
 @Table(name = "Teacher")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Teacher implements Serializable {
+    private static final long serialVersionUID = 647657865874500228L;
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "increment")
@@ -34,56 +42,5 @@ public class Teacher implements Serializable {
         this.passWord = passWord;
     }
 
-    public Teacher() {
-    }
-
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", passWord='" + passWord + '\'' +
-                '}';
-    }
-
-    public List<Project> getProjectList() {
-        return projectList;
-    }
-
-    public void setProjectList(List<Project> projectList) {
-        this.projectList = projectList;
-    }
-
-    public List<Course> getCourseList() {
-        return courseList;
-    }
-
-    public void setCourseList(List<Course> courseList) {
-        this.courseList = courseList;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassWord() {
-        return passWord;
-    }
-
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
-    }
 }
 

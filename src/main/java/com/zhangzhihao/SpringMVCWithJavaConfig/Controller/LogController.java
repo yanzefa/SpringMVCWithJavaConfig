@@ -34,7 +34,7 @@ public class LogController {
         map.put("otherCount", otherCount);
         List<Log> listByPage = null;
         try {
-            listByPage = logService.getListByPage(1, 10);
+            listByPage = (List<Log>) logService.getListByPage(1, 10);
         } catch (Exception e) {
             LogToDB(e);
         }

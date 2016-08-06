@@ -1,8 +1,8 @@
 package com.zhangzhihao.SpringMVCWithJavaConfig.Service;
 
 
-import com.zhangzhihao.SpringMVCWithJavaConfig.Dao.Query;
 import com.zhangzhihao.SpringMVCWithJavaConfig.Model.Log;
+import com.zhangzhihao.SpringMVCWithJavaConfig.Repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

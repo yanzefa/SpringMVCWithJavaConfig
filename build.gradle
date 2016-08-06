@@ -98,6 +98,9 @@ dependencies {
             //Groovy
             "org.codehaus.groovy:groovy:2.4.7",
 
+            //Lombok
+            "org.projectlombok:lombok:1.16.10",
+
     )
     testCompile(
             //jUnit

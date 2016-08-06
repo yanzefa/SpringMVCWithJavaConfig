@@ -1,13 +1,12 @@
 package com.zhangzhihao.SpringMVCWithJavaConfig.Service;
 
 
-import com.zhangzhihao.SpringMVCWithJavaConfig.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCWithJavaConfig.Dao.Query;
+import com.zhangzhihao.SpringMVCWithJavaConfig.Repository.BaseRepository;
+import com.zhangzhihao.SpringMVCWithJavaConfig.Repository.Query;
 import com.zhangzhihao.SpringMVCWithJavaConfig.Utils.PageResults;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -19,14 +18,34 @@ import java.util.List;
  * @param <T> 实体类型
  */
 @SuppressWarnings({"unchecked", "unused", "SpringJavaAutowiredMembersInspection"})
+@Transactional
 class BaseService<T> {
-    private final Logger logger = LoggerFactory.getLogger(BaseService.class);
     @Autowired
-    private BaseDao<T> baseDao;
+    private BaseRepository<T> baseRepository;
     private Class<T> modelClass;
 
     BaseService() {
         modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    /**
+     * 这个实体是否存在在数据库
+     *
+     * @param model 实体
+     * @return 是否存在
+     */
+    @Transactional(readOnly = true)
+    public boolean contains(@NotNull final T model) {
+        return baseRepository.contains(model);
+    }
+
+    /**
+     * 使实体变为不受管理的状态
+     *
+     * @param model 实体
+     */
+    public void detach(@NotNull final T model) {
+        baseRepository.detach(model);
     }
 
     /**
@@ -35,7 +54,7 @@ class BaseService<T> {
      * @param model 需要添加的对象
      */
     public void save(@NotNull final T model) throws Exception {
-        baseDao.save(model);
+        baseRepository.save(model);
     }
 
     /**
@@ -45,7 +64,7 @@ class BaseService<T> {
      *                  失败会抛异常
      */
     public void saveAll(@NotNull final List<T> modelList) throws Exception {
-        baseDao.saveAll(modelList);
+        baseRepository.saveAll(modelList);
     }
 
     /**
@@ -55,7 +74,7 @@ class BaseService<T> {
      *              失败会抛异常
      */
     public void delete(@NotNull final T model) throws Exception {
-        baseDao.delete(model);
+        baseRepository.delete(model);
     }
 
     /**
@@ -65,7 +84,7 @@ class BaseService<T> {
      *                  失败会抛异常
      */
     public void deleteAll(@NotNull final List<T> modelList) throws Exception {
-        baseDao.deleteAll(modelList);
+        baseRepository.deleteAll(modelList);
     }
 
     /**
@@ -75,7 +94,7 @@ class BaseService<T> {
      *           失败抛出异常
      */
     public void deleteById(@NotNull final Serializable id) throws Exception {
-        baseDao.deleteById(modelClass, id);
+        baseRepository.deleteById(modelClass, id);
     }
 
     /**
@@ -85,7 +104,7 @@ class BaseService<T> {
      *              失败会抛出异常
      */
     public void saveOrUpdate(@NotNull final T model) throws Exception {
-        baseDao.saveOrUpdate(model);
+        baseRepository.saveOrUpdate(model);
     }
 
     /**
@@ -95,7 +114,7 @@ class BaseService<T> {
      *                  失败会抛出异常
      */
     public void saveOrUpdateAll(@NotNull final List<T> modelList) throws Exception {
-        baseDao.saveOrUpdateAll(modelList);
+        baseRepository.saveOrUpdateAll(modelList);
     }
 
     /**
@@ -104,8 +123,9 @@ class BaseService<T> {
      * @param id 主键(Serializable)
      * @return model
      */
+    @Transactional(readOnly = true)
     public T getById(@NotNull final Serializable id) throws Exception {
-        return baseDao.getById(modelClass, id);
+        return baseRepository.getById(modelClass, id);
     }
 
     /**
@@ -113,10 +133,21 @@ class BaseService<T> {
      *
      * @return List
      */
+    @Transactional(readOnly = true)
     public List<T> getAll() throws Exception {
-        return baseDao.getAll(modelClass);
+        return baseRepository.getAll(modelClass);
     }
 
+    /**
+     * 获得数量 利用Count(*)实现
+     *
+     * @param modelClass 类型，比如User.class
+     * @return 数量
+     */
+    @Transactional(readOnly = true)
+    public int getCount(Class<T> modelClass) {
+        return baseRepository.getCount(modelClass);
+    }
 
     /**
      * 分页查询
@@ -125,10 +156,11 @@ class BaseService<T> {
      * @param pageSize          每页数量
      * @return 查询结果
      */
-    public List<T> getListByPage(@NotNull final Integer currentPageNumber,
-                                 @NotNull final Integer pageSize)
+    @Transactional(readOnly = true)
+    public PageResults<T> getListByPage(@NotNull final Integer currentPageNumber,
+                                        @NotNull final Integer pageSize)
             throws Exception {
-        return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
+        return baseRepository.getListByPage(modelClass, currentPageNumber, pageSize);
     }
 
     /**
@@ -139,11 +171,12 @@ class BaseService<T> {
      * @param query             封装的查询条件
      * @return 查询结果
      */
+    @Transactional(readOnly = true)
     public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
                                                 @NotNull Integer pageSize,
                                                 @NotNull Query query)
             throws Exception {
-        return baseDao.getListByPageAndQuery(currentPageNumber, pageSize, query);
+        return baseRepository.getListByPageAndQuery(currentPageNumber, pageSize, query);
     }
 
     /**
@@ -151,8 +184,9 @@ class BaseService<T> {
      *
      * @return 数量
      */
+    @Transactional(readOnly = true)
     public int getCount() throws Exception {
-        return baseDao.getCount(modelClass);
+        return baseRepository.getCount(modelClass);
     }
 
     /**
@@ -161,8 +195,9 @@ class BaseService<T> {
      * @param query 查询条件
      * @return 数量
      */
+    @Transactional(readOnly = true)
     public int getCountByQuery(final @NotNull Query query) throws Exception {
-        return baseDao.getCountByQuery(query);
+        return baseRepository.getCountByQuery(query);
     }
 
     /**
@@ -174,7 +209,7 @@ class BaseService<T> {
      */
     public int executeSql(@NotNull final String sql, @NotNull final Object... values)
             throws Exception {
-        return baseDao.executeSql(sql, values);
+        return baseRepository.executeSql(sql, values);
     }
 
     /**
@@ -184,8 +219,9 @@ class BaseService<T> {
      * @param values 参数列表
      * @return 受影响的行数
      */
+    @Transactional(readOnly = true)
     public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
-        return baseDao.queryByJpql(jpql, values);
+        return baseRepository.queryByJpql(jpql, values);
     }
 
     /**
@@ -194,8 +230,9 @@ class BaseService<T> {
      * @param jpql jpql查询条件
      * @return 数量
      */
+    @Transactional(readOnly = true)
     public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
-        return baseDao.getCountByJpql(jpql, values);
+        return baseRepository.getCountByJpql(jpql, values);
     }
 
 
@@ -208,11 +245,12 @@ class BaseService<T> {
      * @param values            jpql参数
      * @return 查询结果
      */
+    @Transactional(readOnly = true)
     public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
                                                     @NotNull Integer pageSize,
                                                     @NotNull final String jpql,
                                                     @NotNull Object... values) {
-        return baseDao.getListByPageAndJpql(currentPageNumber, pageSize, jpql, values);
+        return baseRepository.getListByPageAndJpql(currentPageNumber, pageSize, jpql, values);
     }
 
     /**
@@ -223,15 +261,25 @@ class BaseService<T> {
      * @return 受影响的行数
      */
     public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
-        return baseDao.executeJpql(jpql, values);
+        return baseRepository.executeJpql(jpql, values);
     }
 
     /**
      * refresh 刷新实体状态
+     * 若在加载某个Entity实例之后，而数据库因另一个操作而发生变动，
+     * 可以使用refresh()方法，将数据库的更改加载到Entity实例中，
+     * 若Entity先前有了更改，则会被覆盖
      *
      * @param model 实体
      */
-    public void refresh(@NotNull T model) throws Exception {
-        baseDao.refresh(model);
+    public void refresh(@NotNull T model) {
+        baseRepository.refresh(model);
+    }
+
+    /**
+     * 使用flush()方法，强制EntityManager中管理的所有Entity对应的数据库与实体状态同步
+     */
+    public void flush() {
+        baseRepository.flush();
     }
 }
