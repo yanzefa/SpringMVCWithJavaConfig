@@ -34,6 +34,7 @@ public class LogController {
         map.put("otherCount", otherCount);
         List<Log> listByPage = null;
         try {
+            //noinspection unchecked
             listByPage = (List<Log>) logService.getListByPage(1, 10);
         } catch (Exception e) {
             LogToDB(e);
