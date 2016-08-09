@@ -37,6 +37,10 @@ dependencies {
             "org.springframework:spring-instrument:${SpringVersion}",
             "org.springframework:spring-orm:${SpringVersion}",
 
+            //Spring-Session
+            "org.springframework.session:spring-session:1.2.1.RELEASE",
+            "org.springframework.data:spring-data-redis:1.7.2.RELEASE",
+
             // MySQL
             "mysql:mysql-connector-java:6.0.2",
 
@@ -100,6 +104,11 @@ dependencies {
 
             //Lombok
             "org.projectlombok:lombok:1.16.10",
+
+            //jedis
+            "redis.clients:jedis:2.9.0",
+            "org.apache.commons:commons-pool2:2.4.2",
+
 
     )
     testCompile(

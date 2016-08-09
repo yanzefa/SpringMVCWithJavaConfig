@@ -8,9 +8,11 @@ import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -24,6 +26,7 @@ import java.util.Properties;
 @EnableCaching
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
+@EnableRedisHttpSession
 //@ImportResource("classpath:Spring.xml")
 @PropertySource("classpath:db.properties") //导入资源文件
 @ComponentScan(basePackages = "com.zhangzhihao.SpringMVCWithJavaConfig",
@@ -138,7 +141,15 @@ public class RootConfig {
         return jpaTransactionManager;
     }
 
-    /*@Bean(name = "delegatingFilterProxy")
+    @Bean
+    public JedisConnectionFactory connectionFactory() {
+        JedisConnectionFactory connection = new JedisConnectionFactory();
+        connection.setHostName("127.0.0.1");
+        connection.setPort(6379);
+        return connection;
+    }
+
+    /*@Bean
     public DelegatingFilterProxy getDelegatingFilterProxy() {
         return new DelegatingFilterProxy();
     }*/
