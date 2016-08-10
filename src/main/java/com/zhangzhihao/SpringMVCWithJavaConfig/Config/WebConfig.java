@@ -24,7 +24,9 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * 相当于SpringMVC.xml
+ */
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.zhangzhihao.SpringMVCWithJavaConfig",

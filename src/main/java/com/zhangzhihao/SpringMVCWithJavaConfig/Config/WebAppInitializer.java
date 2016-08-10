@@ -7,6 +7,9 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import javax.servlet.Filter;
 
+/**
+ * 相当于web.xml
+ */
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 
