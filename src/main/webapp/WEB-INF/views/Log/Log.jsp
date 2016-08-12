@@ -1,11 +1,96 @@
+<%--suppress HtmlUnknownAttribute --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%--<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>--%>
+
+<script type="text/javascript">
+    $(document).ready(
+            function () {
+                var sizePerPage = 10;//每页多少条
+                function Paging(pageNumber, pageSize) {
+                    $.ajax({
+                        type: "Get",
+                        url: "/Log/getLogByPage?pageNumber=" + pageNumber + "&pageSize=" + pageSize,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data);
+                            var listResults = data["results"];
+
+                            var pagination = $("#pagination");
+                            pagination.empty();
+                            var previousPage = data["previousPage"];
+                            var currentPage = data["currentPage"];
+                            var pageCount = data["pageCount"];
+                            var nextPage = data["nextPage"];
+                            //拼接上一页
+                            if (previousPage < 1 || previousPage >= currentPage) {//上一页不可达
+                                pagination.append("<li class='disabled paging'><a pageNumber='1'>&laquo;</a></li>");
+                            } else {
+                                pagination.append("<li class='paging'><a pageNumber=" + previousPage + ">&laquo;</a></li>");
+                            }
+
+                            //拼接页码
+                            for (var page = 1; page <= pageCount; page++) {
+                                if (page == currentPage) {
+                                    pagination.append("<li class='active paging'><a pageNumber=" + page + ">" + page + "</a></li>")
+                                } else {
+                                    pagination.append("<li class='paging'><a pageNumber=" + page + ">" + page + "</a></li>")
+                                }
+                            }
+
+                            //拼接下一页
+                            if (nextPage < 1 || nextPage <= currentPage) {//下一页不可达
+                                pagination.append("<li class='disabled paging'><a pageNumber=" + nextPage + ">&raquo;</a></li>");
+                            } else {
+                                pagination.append("<li class='paging'><a pageNumber=" + nextPage + ">&raquo;</a></li>");
+                            }
+
+                            $(".paging").click(function () {
+                                var selectedPageNumber = this.getElementsByTagName("a")[0].getAttribute("pageNumber");
+                                //console.lg(this.getElementsByTagName("a")[0].innerHTML);
+                                Paging(selectedPageNumber, sizePerPage);
+                            });
+
+                            $("#LogTableBody").empty();
+                            for (var j = 0; j < data["totalCount"]; j++) {
+                                var result = listResults[j];
+                                try {
+                                    //noinspection JSUnresolvedVariable
+                                    $("#LogTableBody")
+                                            .append("<tr>")
+                                            .append("<th><span class='co-name'>" + result.event_id + "</span></th>")
+                                            .append("<td>" + result.timestmp + "</td>")
+                                            .append("<td>" + result.formatted_message + "</td>")
+                                            .append("<td>" + result.logger_name + "</td>")
+                                            .append("<td>" + result.arg0 + "</td>")
+                                            .append("<td>" + result.arg1 + "</td>")
+                                            .append("<td>" + result.arg2 + "</td>")
+                                            .append("<td>" + result.arg3 + "</td>")
+                                            .append("</tr>");
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    });
+                }
+
+                //页面加载时自动填充第一页，每页十条
+                Paging(1, sizePerPage);
+            }
+    );
+</script>
+
 <!-- Page-Title -->
 <div class="row">
     <div class="col-sm-12">
         <h4 class="pull-left page-title">日志</h4>
         <ol class="breadcrumb pull-right">
-            <li><a href="/">回到首页</a></li>
+            <li><a href="${pageContext.request.contextPath}/">回到首页</a></li>
             <li class="active">日志</li>
         </ol>
     </div>
@@ -112,21 +197,13 @@
                             <th width='20%'>参数3</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <c:forEach items="${list}" var="Log" varStatus="vs">
-                            <tr>
-                                <th><span class="co-name">${Log.event_id}</span></th>
-                                <td>${Log.timestmp}</td>
-                                <td>${Log.formatted_message}</td>
-                                <td>${Log.logger_name}</td>
-                                <td>${Log.arg0}</td>
-                                <td>${Log.arg1}</td>
-                                <td>${Log.arg2}</td>
-                                <td>${Log.arg3}</td>
-                            </tr>
-                        </c:forEach>
+                        <tbody id="LogTableBody">
+
                         </tbody>
                     </table>
+                    <ul class="pagination" id="pagination">
+
+                    </ul>
                 </div>
 
             </div>
@@ -135,9 +212,26 @@
 </div>
 <!-- end row -->
 
-<script src="/assets/js/Chart.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/Chart.min.js"></script>
 
+<%--suppress JSUnusedAssignment --%>
 <script type="text/javascript">
+    var infoData;
+    $.ajax({
+        type: "Get",
+        url: "/Log/getLogInfo",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            infoData = data;
+            console.log("infoData:");
+            console.log(infoData)
+        },
+        error: function (err) {
+            console.log("Error:");
+            console.log(err);
+        }
+    });
     // 设置参数
     var data = {
         labels: [
@@ -147,7 +241,7 @@
         ],
         datasets: [
             {
-                data: [${LogUtilsCount}, ${LogAspectCount}, ${otherCount}],
+                data: [infoData["LogUtilsCount"], infoData["LogAspectCount"], infoData["otherCount"]],
                 backgroundColor: [
                     "#FF6384",
                     "#36A2EB",
@@ -205,4 +299,4 @@
 </script>
 
 <!-- dashboard -->
-<script src="/assets/plugins/dashboard/jquery.dashboard.js"></script>
+<script src="${pageContext.request.contextPath}/assets/plugins/dashboard/jquery.dashboard.js"></script>

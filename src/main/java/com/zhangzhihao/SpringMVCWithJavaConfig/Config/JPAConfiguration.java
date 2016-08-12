@@ -61,7 +61,7 @@ public class JPAConfiguration {
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         jpaProperties.setProperty("hibernate.show_sql", "true");
         jpaProperties.setProperty("hibernate.format_sql", "true");
-        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "update");
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "validate"); //update validate
         jpaProperties.setProperty("cache.use_second_level_cache", "true");
         jpaProperties.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.SingletonEhCacheRegionFactory");
         jpaProperties.setProperty("cache.use_query_cache", "true");
