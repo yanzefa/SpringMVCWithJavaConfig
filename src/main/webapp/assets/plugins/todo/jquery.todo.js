@@ -1,8 +1,3 @@
-/**
-* Theme: Velonic Admin Template
-* Author: Coderthemes
-* Todo Application
-*/
 
 !function($) {
     "use strict";

@@ -9,7 +9,7 @@
                 function Paging(pageNumber, pageSize) {
                     $.ajax({
                         type: "Get",
-                        url: "/Log/getLogByPage?pageNumber=" + pageNumber + "&pageSize=" + pageSize,
+                        url: "/Log/getLogByPage/pageNumber/" + pageNumber + "/pageSize/" + pageSize,
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (data) {
@@ -73,8 +73,13 @@
                             }
 
                         },
-                        error: function (err) {
-                            console.log(err)
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            swal({
+                                title: "出错了！",
+                                text: "错误信息" + XMLHttpRequest.status,
+                                type: "error",
+                                confirmButtonText: "知道了"
+                            });
                         }
                     });
                 }

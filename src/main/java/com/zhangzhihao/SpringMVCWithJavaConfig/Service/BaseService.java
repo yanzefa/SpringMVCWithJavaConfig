@@ -35,7 +35,7 @@ class BaseService<T> {
      * @return 是否存在
      */
     @Transactional(readOnly = true)
-    public boolean contains(@NotNull final T model) {
+    public boolean contains(@NotNull final T model) throws Exception {
         return baseRepository.contains(model);
     }
 
@@ -44,7 +44,7 @@ class BaseService<T> {
      *
      * @param model 实体
      */
-    public void detach(@NotNull final T model) {
+    public void detach(@NotNull final T model) throws Exception {
         baseRepository.detach(model);
     }
 
@@ -145,7 +145,7 @@ class BaseService<T> {
      * @return 数量
      */
     @Transactional(readOnly = true)
-    public int getCount(Class<T> modelClass) {
+    public int getCount(Class<T> modelClass) throws Exception {
         return baseRepository.getCount(modelClass);
     }
 
@@ -220,7 +220,7 @@ class BaseService<T> {
      * @return 受影响的行数
      */
     @Transactional(readOnly = true)
-    public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
+    public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) throws Exception {
         return baseRepository.queryByJpql(jpql, values);
     }
 
@@ -231,7 +231,7 @@ class BaseService<T> {
      * @return 数量
      */
     @Transactional(readOnly = true)
-    public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
+    public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) throws Exception {
         return baseRepository.getCountByJpql(jpql, values);
     }
 
@@ -249,7 +249,7 @@ class BaseService<T> {
     public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
                                                     @NotNull Integer pageSize,
                                                     @NotNull final String jpql,
-                                                    @NotNull Object... values) {
+                                                    @NotNull Object... values) throws Exception {
         return baseRepository.getListByPageAndJpql(currentPageNumber, pageSize, jpql, values);
     }
 
@@ -260,7 +260,7 @@ class BaseService<T> {
      * @param values 参数列表
      * @return 受影响的行数
      */
-    public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
+    public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) throws Exception {
         return baseRepository.executeJpql(jpql, values);
     }
 
@@ -272,14 +272,14 @@ class BaseService<T> {
      *
      * @param model 实体
      */
-    public void refresh(@NotNull T model) {
+    public void refresh(@NotNull T model) throws Exception {
         baseRepository.refresh(model);
     }
 
     /**
      * 使用flush()方法，强制EntityManager中管理的所有Entity对应的数据库与实体状态同步
      */
-    public void flush() {
+    public void flush() throws Exception {
         baseRepository.flush();
     }
 }

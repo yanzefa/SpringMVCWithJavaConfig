@@ -1,10 +1,3 @@
-/**
-* Theme: Montran Admin Template
-* Author: Coderthemes
-* Module/App: Main Js
-*/
-
-
 !function($) {
     "use strict";
 
@@ -243,9 +236,9 @@ function($) {
     "use strict";
     
     var MoltranApp = function() {
-        this.VERSION = "1.1.0", 
-        this.AUTHOR = "Coderthemes", 
-        this.SUPPORT = "coderthemes@gmail.com", 
+        this.VERSION = "1.0",
+        this.AUTHOR = "izhangzhihao",
+        this.SUPPORT = "izhangzhihao@gmail.com",
         this.pageScrollElement = "html, body", 
         this.$body = $("body")
     };

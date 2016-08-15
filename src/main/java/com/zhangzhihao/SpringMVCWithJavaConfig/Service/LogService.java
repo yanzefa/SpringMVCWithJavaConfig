@@ -14,7 +14,7 @@ public class LogService extends BaseService<Log> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Long getExceptionCountByCallerFilename(String callerFilename) {
+    public Long getExceptionCountByCallerFilename(String callerFilename) throws Exception{
         Query query = new Query(entityManager);
         return (Long) query.from(Log.class)
                 .whereEqual("caller_filename", callerFilename)
@@ -23,7 +23,7 @@ public class LogService extends BaseService<Log> {
                 .getSingleResult();
     }
 
-    public Long getExceptionCount() {
+    public Long getExceptionCount() throws Exception{
         Query query = new Query(entityManager);
         return (Long) query.from(Log.class)
                 .selectCount()

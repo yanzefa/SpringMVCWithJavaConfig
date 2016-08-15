@@ -3,10 +3,7 @@ package com.zhangzhihao.SpringMVCWithJavaConfig.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zhangzhihao.SpringMVCWithJavaConfig.Annotation.AuthorityType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -21,7 +18,7 @@ import java.util.List;
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 
-@Data
+
 @ToString(exclude = {"bankCard", "roleList"})
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,21 +28,29 @@ public class User implements Serializable {
 
     @Id
     @NotNull
+    @Getter
+    @Setter
     private String userName;
 
-    @JsonIgnore    //生成json不包含此字段
+
     @NotNull
+    @Setter
     private String passWord;
 
     //@NotNull
+    @Getter
+    @Setter
     private AuthorityType authorityType;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", optional = true, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SELECT)
+    @Getter
+    @Setter
     private BankCard bankCard;
 
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "userList", fetch = FetchType.LAZY)
     @JsonIgnore
+    @Setter
     private List<Role> roleList;
 
 
@@ -64,5 +69,15 @@ public class User implements Serializable {
         this.userName = userName;
         this.passWord = passWord;
         this.roleList = roleList;
+    }
+
+    @JsonIgnore    //生成json不包含此字段,必须打在Getter上面
+    public String getPassWord() {
+        return passWord;
+    }
+
+    @JsonIgnore    //生成json不包含此字段
+    public List<Role> getRoleList() {
+        return roleList;
     }
 }

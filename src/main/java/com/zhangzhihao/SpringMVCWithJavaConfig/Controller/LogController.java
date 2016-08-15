@@ -1,12 +1,14 @@
 package com.zhangzhihao.SpringMVCWithJavaConfig.Controller;
 
 
+import com.zhangzhihao.SpringMVCWithJavaConfig.Model.Log;
 import com.zhangzhihao.SpringMVCWithJavaConfig.Service.LogService;
+import com.zhangzhihao.SpringMVCWithJavaConfig.Utils.PageResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -26,6 +28,7 @@ public class LogController {
         Assert.assertNotNull(logService,"logService不可为Null！");
         this.logService=logService;
     }*/
+
     /**
      * 日志统计界面
      *
@@ -38,15 +41,23 @@ public class LogController {
 
     /**
      * 获得日志的错误信息，日志条数
+     *
      * @return json数据
      */
-    @RequestMapping(value = "/getLogInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/getLogInfo", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Long> getLogInfo(){
-        Map<String,Long> map=new HashMap<>();
-        Long LogUtilsCount = logService.getExceptionCountByCallerFilename("LogUtils.java");//Controller出了异常
-        Long LogAspectCount = logService.getExceptionCountByCallerFilename("LogAspect.java");//自定义类异常
-        long totalCount = logService.getExceptionCount();
+    public Map<String, Long> getLogInfo() {
+        Map<String, Long> map = new HashMap<>();
+        long LogUtilsCount = 0L;//Controller出了异常
+        long LogAspectCount = 0L;//自定义类异常
+        long totalCount = 0L;
+        try {
+            LogUtilsCount = logService.getExceptionCountByCallerFilename("LogUtils.java");//Controller出了异常
+            LogAspectCount = logService.getExceptionCountByCallerFilename("LogAspect.java");//自定义类异常
+            totalCount = logService.getExceptionCount();
+        } catch (Exception e) {
+            LogToDB(e);
+        }
         Long otherCount = totalCount - LogAspectCount - LogUtilsCount;
         map.put("totalCount", totalCount);
         map.put("LogUtilsCount", LogUtilsCount);
@@ -62,16 +73,17 @@ public class LogController {
      * @param pageSize   每页大小
      * @return json数据
      */
-    @RequestMapping(value = "/getLogByPage", method = RequestMethod.GET)
+    @RequestMapping(value = "/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
     @ResponseBody
-    public Object getLogByPage(@RequestParam int pageNumber,
-                                  @RequestParam int pageSize) {
-        try {
+    public PageResults<Log> getLogByPage(@PathVariable int pageNumber,
+                                         @PathVariable int pageSize) throws Exception {
+       /* try {
             return logService.getListByPage(pageNumber, pageSize);
         } catch (Exception e) {
             LogToDB(e);
             return "";
-        }
+        }*/
+        return logService.getListByPage(pageNumber, pageSize);
     }
 
 }

@@ -9,13 +9,13 @@
 <!-- 检测浏览器和操作系统 -->
 <script src="assets/js/detect.js"></script>
 <!-- 让移动设备click事件没有延迟-->
-<script src="assets/js/fastclick.js"></script>
+<script src="assets/js/fastclick.min.js"></script>
 <!-- 滚动条插件-->
-<script src="assets/js/jquery.slimscroll.js"></script>
+<script src="assets/js/jquery.slimscroll.min.js"></script>
 <!-- 单出对话框-->
 <script src="assets/js/jquery.blockUI.js"></script>
 <!--类Material Design 的圆形波浪（涟漪）点击特效插件-->
-<script src="assets/js/waves.js"></script>
+<script src="assets/js/waves.min.js"></script>
 <!--动画特效插件-->
 <script src="assets/js/wow.min.js"></script>
 <!--滚动条插件-->
@@ -27,7 +27,7 @@
 <script src="assets/js/jquery.app.js"></script>
 
 <!-- moment js -->
-<script src="assets/plugins/moment/moment.js"></script>
+<script src="assets/plugins/moment/moment.min.js"></script>
 
 <!-- counters -->
 <script src="assets/plugins/waypoints/jquery.waypoints.js"></script>

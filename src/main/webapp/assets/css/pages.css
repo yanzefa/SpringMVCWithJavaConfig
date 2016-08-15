@@ -1,7 +1,4 @@
 /*
-Template Name: Moltran Dashboard
-Author: CoderThemes
-Email: coderthemes@gmail.com
 File: Pages
 */
 /*
@@ -21,9 +18,9 @@ File: Pages
 /* ==============
   Profile
 ===================*/
-.bg-img {
-  background: url(../images/small/bg.jpg) center;
-}
+/*.bg-img {
+  background: url(../../app/Account/Login/bg.jpg) center;
+}*/
 .bg-overlay {
   -moz-border-radius: 6px 6px 0px 0px;
   -webkit-border-radius: 6px 6px 0px 0px;

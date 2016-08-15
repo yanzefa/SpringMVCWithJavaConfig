@@ -12,7 +12,6 @@ import java.security.MessageDigest;
 
 import static com.zhangzhihao.SpringMVCWithJavaConfig.Utils.LogUtils.LogToDB;
 
-
 public class FileUtils {
     /**
      * 删除指定文件夹

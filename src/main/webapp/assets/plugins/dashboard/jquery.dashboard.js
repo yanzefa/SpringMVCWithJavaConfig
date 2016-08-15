@@ -1,10 +1,3 @@
-/**
-* Theme: Moltran Admin Template
-* Author: Coderthemes
-* Module/App: Dashboard
-*/
-
-
 !function($) {
     "use strict";
 

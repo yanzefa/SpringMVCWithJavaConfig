@@ -6,7 +6,6 @@ import java.security.MessageDigest;
 
 import static com.zhangzhihao.SpringMVCWithJavaConfig.Utils.LogUtils.LogToDB;
 
-
 public class SHAUtils {
     public static String getSHA_1(@NotNull final String inStr) {
         return baseSHA(inStr, "SHA-1");

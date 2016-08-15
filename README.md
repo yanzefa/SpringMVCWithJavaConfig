@@ -16,7 +16,7 @@
     build.gradle ：项目配置文件，管理依赖，编译，打包
 
 # 主要的后端架构：
-    Spring + Spring MVC + JPA + Spring Data + Hibernate
+    Spring + Spring MVC + JPA + Spring Data + Hibernate + Spring-Session
     
 # 正确导入项目的姿势：
     导入前视情况修改maven仓库地址(build.gradle)和数据库地址(src/main/resources/db.properties)

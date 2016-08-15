@@ -8,8 +8,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static com.zhangzhihao.SpringMVCWithJavaConfig.Utils.LogUtils.LogToDB;
-
 
 @ControllerAdvice
 public class HandlerExceptionController {
@@ -19,7 +17,7 @@ public class HandlerExceptionController {
 
 
         //将错误信息记录到数据库
-        LogToDB(ex);
+        //LogToDB(ex); //不再重复记录异常
 
         ModelAndView modelAndView = new ModelAndView("../../500");
         modelAndView.addObject("MSG", ex.toString());
