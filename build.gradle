@@ -7,7 +7,7 @@ buildscript {
         //内网nexus私服地址
         //maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
         //外网nexus私服地址
-        maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
+        //maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
         mavenCentral()
         maven { url "http://maven.oschina.net/content/groups/public/" }
         maven { url "http://repo.spring.io/release" }
@@ -22,6 +22,8 @@ buildscript {
 apply plugin: "java"
 apply plugin: "war"
 apply plugin: "spring-boot"
+apply plugin: "jacoco"
+apply plugin: "idea"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -33,7 +35,7 @@ repositories {
     //内网nexus私服地址
     //maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
     //外网nexus私服地址
-    //maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
+    maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
     jcenter()
     mavenCentral()
     maven { url "http://maven.oschina.net/content/groups/public/" }
@@ -92,4 +94,45 @@ dependencies {
             //jUnit
             "junit:junit:4.12",
     )
+}
+
+task copyJars(type: Copy) {
+    from configurations.runtime
+    into "lib" //复制到lib目录
+}
+
+//让gradle支持中文
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+test {
+    useJUnit()
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+
+    // listen to standard out and standard error of the test JVM(s)
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message)
+    }
+
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/test.exec")
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+}
+
+build.dependsOn jacocoTestReport
+
+task integrationTest(type: Test) {
+    include 'test/java/**'
 }

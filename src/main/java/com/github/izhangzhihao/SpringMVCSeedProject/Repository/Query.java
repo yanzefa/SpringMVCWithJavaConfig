@@ -4,8 +4,8 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Repository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.jpa.criteria.CriteriaBuilderImpl;
-import org.hibernate.jpa.criteria.predicate.*;
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
+import org.hibernate.query.criteria.internal.predicate.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.EntityManager;

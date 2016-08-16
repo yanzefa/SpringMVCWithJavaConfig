@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+import java.util.Objects;
+
 import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
 
@@ -44,10 +46,12 @@ public class AccountController {
 	 */
 	@Cacheable("springCache")
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
-	public String Login(@RequestParam("UserName") String UserName, @RequestParam("Password") String Password, HttpSession session) {
+	public String Login(@RequestParam("UserName") String UserName,
+						@RequestParam("Password") String Password,
+						HttpSession session) {
 		String userName = UserName.trim();
 		User LoginUser = null;
-		if (userName != null && userName != "") {
+		if (userName != null && !Objects.equals(userName, "")) {
 			try {
 				LoginUser = userService.getById(userName);
 			} catch (Exception e) {
@@ -60,7 +64,7 @@ public class AccountController {
 			return "redirect:/MustLogin";//为防止重复提交数据，使用重定向视图
 
 		} else {
-			return "/Account/Login";
+			return "redirect:/Account/Login";
 		}
 	}
 }
