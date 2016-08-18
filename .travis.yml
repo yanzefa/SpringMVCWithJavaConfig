@@ -5,7 +5,9 @@ os:
 jdk:
   - oraclejdk8
 script:
-- gradle assemble
+- java -version
+- ./gradlew -version
+- ./gradlew assemble
 install:
 - /bin/true
 before_cache:
