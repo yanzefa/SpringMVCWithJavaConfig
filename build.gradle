@@ -4,10 +4,7 @@ version "1.0-SNAPSHOT"
 buildscript {
     repositories {
         mavenLocal()
-        //内网nexus私服地址
-        //maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
-        //外网nexus私服地址
-        //maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
+		jcenter()
         mavenCentral()
         maven { url "http://maven.oschina.net/content/groups/public/" }
         maven { url "http://repo.spring.io/release" }
@@ -32,10 +29,6 @@ def HibernateVersion = "5.2.1.Final"
 
 repositories {
     mavenLocal()
-    //内网nexus私服地址
-    //maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
-    //外网nexus私服地址
-    maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
     jcenter()
     mavenCentral()
     maven { url "http://maven.oschina.net/content/groups/public/" }
