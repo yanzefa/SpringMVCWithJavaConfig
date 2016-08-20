@@ -4,9 +4,9 @@ version "1.0-SNAPSHOT"
 buildscript {
     repositories {
         mavenLocal()
+		maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
 		jcenter()
         mavenCentral()
-        maven { url "http://maven.oschina.net/content/groups/public/" }
         maven { url "http://repo.spring.io/release" }
         maven { url "https://repo.spring.io/libs-snapshot" }
     }
@@ -29,9 +29,9 @@ def HibernateVersion = "5.2.1.Final"
 
 repositories {
     mavenLocal()
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
     jcenter()
     mavenCentral()
-    maven { url "http://maven.oschina.net/content/groups/public/" }
     maven { url "http://repo.spring.io/release" }
     maven { url "https://repo.spring.io/libs-snapshot" }
 }
