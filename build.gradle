@@ -25,7 +25,7 @@ apply plugin: "idea"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 def SpringBootVersion = "1.4.0.RELEASE"
-def HibernateVersion = "5.2.1.Final"
+def HibernateVersion = "5.2.2.Final"
 
 repositories {
     mavenLocal()
