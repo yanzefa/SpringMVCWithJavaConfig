@@ -11,28 +11,26 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * 将SpringMVC缓存至Redis中就取消注释该文件，注释掉
+ *
  * @see EhCacheConfig
  */
 @Configuration
 @EnableCaching
 public class RedisCacheConfig extends CachingConfigurerSupport {
+
     /**
      * 缓存管理器
-     *
-     * @param redisTemplate
-     * @return
      */
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
-        // Number of seconds before expiration. Defaults to unlimited (0)
-        //cacheManager.setDefaultExpiration(redisMaxWait);// Sets the default expire time (in seconds)
+        cacheManager.setDefaultExpiration(300);// 设置缓存过期时间单位秒，默认不过期
         return cacheManager;
     }
 
     /**
      * @return 自定义策略生成的key
-     * @description 自定义的缓存key的生成策略</br>
+     * 自定义的缓存key的生成策略</br>
      * 若想使用这个key</br>
      * 只需要讲注解上keyGenerator的值设置为customKeyGenerator即可</br>
      */
