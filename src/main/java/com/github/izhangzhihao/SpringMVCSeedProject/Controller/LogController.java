@@ -5,6 +5,7 @@ import com.github.izhangzhihao.SpringMVCSeedProject.Model.Log;
 import com.github.izhangzhihao.SpringMVCSeedProject.Service.LogService;
 import com.github.izhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ public class LogController {
      */
     @RequestMapping(value = "/getLogInfo", method = RequestMethod.GET)
     @ResponseBody
+    @Cacheable("getLogInfo")
     public Map<String, Long> getLogInfo() {
         Map<String, Long> map = new HashMap<>();
         long LogUtilsCount = 0L;//Controller出了异常
@@ -75,6 +77,7 @@ public class LogController {
      */
     @RequestMapping(value = "/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
     @ResponseBody
+    @Cacheable("getLogByPage")
     public PageResults<Log> getLogByPage(@PathVariable int pageNumber,
                                          @PathVariable int pageSize) throws Exception {
        /* try {

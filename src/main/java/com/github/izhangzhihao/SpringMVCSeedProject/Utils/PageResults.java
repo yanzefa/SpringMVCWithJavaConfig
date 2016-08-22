@@ -3,12 +3,15 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Utils;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResults<T> {
+public class PageResults<T> implements Serializable {
+
+    private static final long serialVersionUID = 8459184039167837494L;
     //上一页
     @Getter
     private int previousPage;

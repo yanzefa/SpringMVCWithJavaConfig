@@ -1,9 +1,8 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Test.TestUtils;
 
 import com.github.izhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
-import com.github.izhangzhihao.SpringMVCSeedProject.Config.EhCacheConfiguration;
-import com.github.izhangzhihao.SpringMVCSeedProject.Config.JPAConfiguration;
-import com.github.izhangzhihao.SpringMVCSeedProject.Config.RedisConfiguration;
+import com.github.izhangzhihao.SpringMVCSeedProject.Config.JPAConfig;
+import com.github.izhangzhihao.SpringMVCSeedProject.Config.RedisConfig;
 import com.github.izhangzhihao.SpringMVCSeedProject.Config.RootConfig;
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.User;
 import org.junit.Test;
@@ -23,8 +22,7 @@ import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.StringUtils.get
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = {
-        EhCacheConfiguration.class, JPAConfiguration.class, RedisConfiguration.class,
-        RootConfig.class
+        JPAConfig.class, RedisConfig.class, RootConfig.class
 })
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,

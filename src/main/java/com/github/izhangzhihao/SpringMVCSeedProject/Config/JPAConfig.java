@@ -17,7 +17,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:db.properties") //导入资源文件
-public class JPAConfiguration {
+public class JPAConfig {
     @Value("${jdbc.userName}")
     String user;
     @Value("${jdbc.password}")

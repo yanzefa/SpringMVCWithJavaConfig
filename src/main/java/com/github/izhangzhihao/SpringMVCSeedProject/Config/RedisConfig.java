@@ -4,14 +4,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 @EnableRedisHttpSession
 @PropertySource("classpath:redis.properties") //导入资源文件
-public class RedisConfiguration {
+public class RedisConfig {
 
     @Value("${redis.host}")
     String host;
@@ -49,5 +51,12 @@ public class RedisConfiguration {
         connection.setDatabase(database);
         connection.setPoolConfig(getJedisPoolConfig());
         return connection;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        return redisTemplate;
     }
 }
