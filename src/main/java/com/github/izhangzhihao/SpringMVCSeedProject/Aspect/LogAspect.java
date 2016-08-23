@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 @Slf4j
 public class LogAspect {
-    @AfterThrowing(throwing = "ex", pointcut = "execution(* com.zhangzhihao.SpringMVCSeedProject.*.*.*(..)))")
+    @AfterThrowing(throwing = "ex", pointcut = "execution(* com.github.izhangzhihao.SpringMVCSeedProject.*.*.*(..)))")
     public void LogToDB(JoinPoint joinPoint, Throwable ex) {
         //出错行
         int lineNumber = ex.getStackTrace()[0].getLineNumber();
