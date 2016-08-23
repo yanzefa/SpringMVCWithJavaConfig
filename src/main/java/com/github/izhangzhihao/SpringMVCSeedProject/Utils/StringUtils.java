@@ -10,10 +10,8 @@ public class StringUtils {
      * @param value 需要判断的对象
      * @return 是Null或""吗？
      */
-    public static boolean isNullOrEmpty(final Object value) {
-        if (value instanceof String)
-            return "".equals(value);
-        return value == null;
+    public static boolean isNullOrEmpty(final String value) {
+        return value == null || value.isEmpty();
     }
 
     public static String getRandomUUID() {

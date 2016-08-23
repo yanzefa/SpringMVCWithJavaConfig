@@ -26,6 +26,7 @@ public class Permission implements Serializable {
     @NotNull
     private String name;
     private String description;
+    @NotNull
     private String permission;
 
     @ManyToOne(fetch = FetchType.LAZY)
