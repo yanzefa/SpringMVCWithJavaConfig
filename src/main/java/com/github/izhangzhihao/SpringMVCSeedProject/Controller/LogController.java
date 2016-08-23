@@ -7,9 +7,9 @@ import com.github.izhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -33,7 +33,8 @@ public class LogController {
      *
      * @return 日志统计界面
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    //@RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     public String logPage() {
         return "Log/Log";
     }
@@ -43,10 +44,11 @@ public class LogController {
      *
      * @return json数据
      */
-    @RequestMapping(value = "/getLogInfo", method = RequestMethod.GET)
+    //@RequestMapping(value = "/getLogInfo", method = RequestMethod.GET)
+    @GetMapping("/getLogInfo")
     @ResponseBody
     @Cacheable(value = "getLogInfo", keyGenerator = "customKeyGenerator")
-    public Map<String, Long> getLogInfo() throws Exception {
+    public Map<String, Long> getLogInfo() {
         Map<String, Long> map = new HashMap<>();
         long LogUtilsCount =
                 logService.getExceptionCountByCallerFilename("LogUtils.java");//Controller出了异常
@@ -69,17 +71,12 @@ public class LogController {
      * @param pageSize   每页大小
      * @return json数据
      */
-    @RequestMapping(value = "/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
+    //@RequestMapping(value = "/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
+    @GetMapping("/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}")
     @ResponseBody
     @Cacheable(value = "getLogByPage", keyGenerator = "customKeyGenerator")
     public PageResults<Log> getLogByPage(@PathVariable int pageNumber,
-                                         @PathVariable int pageSize) throws Exception {
-       /* try {
-            return logService.getListByPage(pageNumber, pageSize);
-        } catch (Exception e) {
-            LogToDB(e);
-            return "";
-        }*/
+                                         @PathVariable int pageSize) {
         return logService.getListByPage(pageNumber, pageSize);
     }
 

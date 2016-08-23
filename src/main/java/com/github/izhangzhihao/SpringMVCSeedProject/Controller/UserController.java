@@ -10,42 +10,24 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/User")
 @Api(value = "/User", tags = "UserAPI", description = "用户信息接口")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/UserList", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/UserList")
     @ApiOperation(value = "获取所有用户", response = User.class, responseContainer = "List")
-    public List<User> getAllUsers() throws Exception {
+    public List<User> getAllUsers() {
         return userService.getAll();
     }
 
-    /*@RequestMapping(value = "/UserList", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<List<User>> getAllUsers() {
-        try {
-            List<User> userList = userService.getAll();
-            return new ResponseEntity<>(userList, HttpStatus.OK);
-        } catch (Exception e) {
-            LogToDB(e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }*/
-
-    @RequestMapping(value = "/getUser/{userName}", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/getUser/{userName}")
     @ApiOperation(
             value = "根据id获取用户信息,不包含密码",
             response = User.class
@@ -53,8 +35,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "指定id的用户不存在")
     })
-    public ResponseEntity<User> getUser(@PathVariable String userName)
-            throws Exception {
+    public ResponseEntity<User> getUser(@PathVariable String userName) {
         User user = userService.getById(userName);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -62,8 +43,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/createUser/userName/{userName}/passWord/{passWord}", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/createUser/userName/{userName}/passWord/{passWord}")
     @ApiOperation(
             value = "创建用户",
             response = User.class
@@ -73,8 +53,7 @@ public class UserController {
             @ApiResponse(code = 201, message = "创建成功")
     })
     public ResponseEntity<Void> createUser(@PathVariable String userName,
-                                           @PathVariable String passWord)
-            throws Exception {
+                                           @PathVariable String passWord) {
         User byId = userService.getById(userName);
         if (byId != null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -84,8 +63,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/updateUser/userName/{userName}/passWord/{passWord}", method = RequestMethod.PUT)
-    @ResponseBody
+    @PutMapping("/updateUser/userName/{userName}/passWord/{passWord}")
     @ApiOperation(
             value = "更新用户",
             response = User.class
@@ -95,8 +73,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "更新成功")
     })
     public ResponseEntity<Void> updateUser(@PathVariable String userName,
-                                           @PathVariable String passWord)
-            throws Exception {
+                                           @PathVariable String passWord) {
         User byId = userService.getById(userName);
         if (byId == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -106,8 +83,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/deleteUser/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
+    @DeleteMapping("/deleteUser/{id}")
     @ApiOperation(
             value = "删除用户",
             response = User.class
@@ -116,8 +92,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "指定id的用户不存在"),
             @ApiResponse(code = 200, message = "删除成功")
     })
-    public ResponseEntity<Void> deleteUser(@PathVariable String id)
-            throws Exception {
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         User byId = userService.getById(id);
         if (byId == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -192,8 +192,7 @@ public class BaseRepository<T> {
     @Transactional(readOnly = true)
     public PageResults<T> getListByPageAndQuery(@NotNull final Integer currentPageNumber,
                                                 @NotNull final Integer pageSize,
-                                                @NotNull final Query query)
-            throws Exception {
+                                                @NotNull final Query query) {
         //获得符合条件的总数目
         //int totalCount = getCountByQuery((Query) query.deepClone());
         int totalCount = getCountByQuery(SerializationUtils.clone(query));

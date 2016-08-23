@@ -35,7 +35,7 @@ class BaseService<T> {
      * @return 是否存在
      */
     @Transactional(readOnly = true)
-    public boolean contains(@NotNull final T model) throws Exception {
+    public boolean contains(@NotNull final T model) {
         return baseRepository.contains(model);
     }
 
@@ -44,7 +44,7 @@ class BaseService<T> {
      *
      * @param model 实体
      */
-    public void detach(@NotNull final T model) throws Exception {
+    public void detach(@NotNull final T model) {
         baseRepository.detach(model);
     }
 
@@ -53,7 +53,7 @@ class BaseService<T> {
      *
      * @param model 需要添加的对象
      */
-    public void save(@NotNull final T model) throws Exception {
+    public void save(@NotNull final T model) {
         baseRepository.save(model);
     }
 
@@ -63,7 +63,7 @@ class BaseService<T> {
      * @param modelList 需要增加的对象的集合
      *                  失败会抛异常
      */
-    public void saveAll(@NotNull final List<T> modelList) throws Exception {
+    public void saveAll(@NotNull final List<T> modelList) {
         baseRepository.saveAll(modelList);
     }
 
@@ -73,7 +73,7 @@ class BaseService<T> {
      * @param model 需要删除的对象
      *              失败会抛异常
      */
-    public void delete(@NotNull final T model) throws Exception {
+    public void delete(@NotNull final T model) {
         baseRepository.delete(model);
     }
 
@@ -83,7 +83,7 @@ class BaseService<T> {
      * @param modelList 需要删除的对象的集合
      *                  失败会抛异常
      */
-    public void deleteAll(@NotNull final List<T> modelList) throws Exception {
+    public void deleteAll(@NotNull final List<T> modelList) {
         baseRepository.deleteAll(modelList);
     }
 
@@ -93,7 +93,7 @@ class BaseService<T> {
      * @param id 需要删除的对象的id
      *           失败抛出异常
      */
-    public void deleteById(@NotNull final Serializable id) throws Exception {
+    public void deleteById(@NotNull final Serializable id) {
         baseRepository.deleteById(modelClass, id);
     }
 
@@ -103,7 +103,7 @@ class BaseService<T> {
      * @param model 需要更新的对象
      *              失败会抛出异常
      */
-    public void saveOrUpdate(@NotNull final T model) throws Exception {
+    public void saveOrUpdate(@NotNull final T model) {
         baseRepository.saveOrUpdate(model);
     }
 
@@ -113,7 +113,7 @@ class BaseService<T> {
      * @param modelList 需要更新或保存的对象
      *                  失败会抛出异常
      */
-    public void saveOrUpdateAll(@NotNull final List<T> modelList) throws Exception {
+    public void saveOrUpdateAll(@NotNull final List<T> modelList) {
         baseRepository.saveOrUpdateAll(modelList);
     }
 
@@ -124,7 +124,7 @@ class BaseService<T> {
      * @return model
      */
     @Transactional(readOnly = true)
-    public T getById(@NotNull final Serializable id) throws Exception {
+    public T getById(@NotNull final Serializable id) {
         return baseRepository.getById(modelClass, id);
     }
 
@@ -134,7 +134,7 @@ class BaseService<T> {
      * @return List
      */
     @Transactional(readOnly = true)
-    public List<T> getAll() throws Exception {
+    public List<T> getAll() {
         return baseRepository.getAll(modelClass);
     }
 
@@ -145,7 +145,7 @@ class BaseService<T> {
      * @return 数量
      */
     @Transactional(readOnly = true)
-    public int getCount(Class<T> modelClass) throws Exception {
+    public int getCount(Class<T> modelClass) {
         return baseRepository.getCount(modelClass);
     }
 
@@ -158,8 +158,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public PageResults<T> getListByPage(@NotNull final Integer currentPageNumber,
-                                        @NotNull final Integer pageSize)
-            throws Exception {
+                                        @NotNull final Integer pageSize) {
         return baseRepository.getListByPage(modelClass, currentPageNumber, pageSize);
     }
 
@@ -174,8 +173,7 @@ class BaseService<T> {
     @Transactional(readOnly = true)
     public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
                                                 @NotNull Integer pageSize,
-                                                @NotNull Query query)
-            throws Exception {
+                                                @NotNull Query query) {
         return baseRepository.getListByPageAndQuery(currentPageNumber, pageSize, query);
     }
 
@@ -185,7 +183,7 @@ class BaseService<T> {
      * @return 数量
      */
     @Transactional(readOnly = true)
-    public int getCount() throws Exception {
+    public int getCount() {
         return baseRepository.getCount(modelClass);
     }
 
@@ -196,7 +194,7 @@ class BaseService<T> {
      * @return 数量
      */
     @Transactional(readOnly = true)
-    public int getCountByQuery(@NotNull final Query query) throws Exception {
+    public int getCountByQuery(@NotNull final Query query) {
         return baseRepository.getCountByQuery(query);
     }
 
@@ -207,8 +205,7 @@ class BaseService<T> {
      * @param values 不定参数数组
      * @return 受影响的行数
      */
-    public int executeSql(@NotNull final String sql, @NotNull final Object... values)
-            throws Exception {
+    public int executeSql(@NotNull final String sql, @NotNull final Object... values) {
         return baseRepository.executeSql(sql, values);
     }
 
@@ -220,7 +217,7 @@ class BaseService<T> {
      * @return 受影响的行数
      */
     @Transactional(readOnly = true)
-    public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) throws Exception {
+    public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
         return baseRepository.queryByJpql(jpql, values);
     }
 
@@ -231,7 +228,7 @@ class BaseService<T> {
      * @return 数量
      */
     @Transactional(readOnly = true)
-    public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) throws Exception {
+    public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
         return baseRepository.getCountByJpql(jpql, values);
     }
 
@@ -249,7 +246,7 @@ class BaseService<T> {
     public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
                                                     @NotNull Integer pageSize,
                                                     @NotNull final String jpql,
-                                                    @NotNull Object... values) throws Exception {
+                                                    @NotNull Object... values) {
         return baseRepository.getListByPageAndJpql(currentPageNumber, pageSize, jpql, values);
     }
 
@@ -260,7 +257,7 @@ class BaseService<T> {
      * @param values 参数列表
      * @return 受影响的行数
      */
-    public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) throws Exception {
+    public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
         return baseRepository.executeJpql(jpql, values);
     }
 
@@ -272,14 +269,14 @@ class BaseService<T> {
      *
      * @param model 实体
      */
-    public void refresh(@NotNull T model) throws Exception {
+    public void refresh(@NotNull T model) {
         baseRepository.refresh(model);
     }
 
     /**
      * 使用flush()方法，强制EntityManager中管理的所有Entity对应的数据库与实体状态同步
      */
-    public void flush() throws Exception {
+    public void flush() {
         baseRepository.flush();
     }
 }

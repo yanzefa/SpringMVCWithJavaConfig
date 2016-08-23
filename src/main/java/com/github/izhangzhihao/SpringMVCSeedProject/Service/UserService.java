@@ -1,6 +1,5 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Service;
 
-
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class UserService extends BaseService<User> {
      * @param user 需要添加的对象
      */
     @Override
-    public void save(@NotNull User user) throws Exception {
+    public void save(@NotNull User user){
         super.save(makeSHA256PasswordWithSalt(user));
     }
 
@@ -47,7 +46,7 @@ public class UserService extends BaseService<User> {
      *                  失败会抛异常
      */
     @Override
-    public void saveAll(@NotNull List<User> userList) throws Exception {
+    public void saveAll(@NotNull List<User> userList){
         userList.forEach(
                 UserService::makeSHA256PasswordWithSalt
         );
@@ -61,7 +60,7 @@ public class UserService extends BaseService<User> {
      * @param user 需要更新的对象
      *              失败会抛出异常
      */
-    public void updatePassWord(@NotNull User user) throws Exception {
+    public void updatePassWord(@NotNull User user){
         super.saveOrUpdate(makeSHA256PasswordWithSalt(user));
     }
 
@@ -71,7 +70,7 @@ public class UserService extends BaseService<User> {
      * @param userList 需要更新或保存的对象
      *                  失败会抛出异常
      */
-    public void updateAllPassWord(@NotNull List<User> userList) throws Exception {
+    public void updateAllPassWord(@NotNull List<User> userList){
         userList.forEach(
                 UserService::makeSHA256PasswordWithSalt
         );
@@ -85,7 +84,7 @@ public class UserService extends BaseService<User> {
      *              失败会抛出异常
      */
     @Override
-    public void saveOrUpdate(@NotNull User user) throws Exception {
+    public void saveOrUpdate(@NotNull User user){
         super.saveOrUpdate(user);
     }
 
@@ -96,7 +95,7 @@ public class UserService extends BaseService<User> {
      *                  失败会抛出异常
      */
     @Override
-    public void saveOrUpdateAll(@NotNull List<User> userList) throws Exception {
+    public void saveOrUpdateAll(@NotNull List<User> userList){
         super.saveOrUpdateAll(userList);
     }
 }

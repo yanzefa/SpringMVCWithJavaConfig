@@ -1,6 +1,5 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +24,11 @@ public class HandlerExceptionController {
         return new ModelAndView("../../403");
     }*/
 
+    /**
+     * 全局Controller异常处理
+     * @param ex 异常
+     * @return 跳转出错页面
+     */
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handlerExceptionMethod(Exception ex) {
