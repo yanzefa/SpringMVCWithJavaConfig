@@ -1,9 +1,11 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,43 +14,54 @@ import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 @EnableRedisHttpSession
-@PropertySource("classpath:redis.properties") //导入资源文件
 public class RedisConfig {
 
-    @Value("${redis.host}")
-    String host;
-    @Value("${redis.port}")
-    int port;
-    @Value("${redis.timeout}")
-    int timeout;
-    @Value("${redis.database}")
-    int database;
-    @Value("${redis.maxTotal}")
-    int maxTotal;
-    @Value("${redis.maxIdle}")
-    int maxIdle;
-    @Value("${redis.maxWaitMillis}")
-    int maxWaitMillis;
-    @Value("${redis.testOnBorrow}")
-    boolean testOnBorrow;
+    @Autowired
+    private Environment environment;
+
+    private String getPropertyFormEnv(String propertyName) {
+        return environment.getProperty(propertyName);
+    }
+
+    private int getIntPropertyFormEnv(String propertyName) {
+        return Integer.parseInt(environment.getProperty(propertyName));
+    }
+
+    @Configuration
+    @Profile("development")
+    @PropertySource("classpath:development/redis.properties")
+    static class Development {
+    }
+
+    @Configuration
+    @Profile("production")
+    @PropertySource("classpath:production/redis.properties")
+    static class Production {
+    }
+
+    @Configuration
+    @Profile("test")
+    @PropertySource("classpath:test/redis.properties")
+    static class Test {
+    }
 
     @Bean
     public JedisPoolConfig getJedisPoolConfig() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxTotal(maxTotal);
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-        jedisPoolConfig.setTestOnBorrow(testOnBorrow);
+        jedisPoolConfig.setMaxTotal(getIntPropertyFormEnv("redis.maxTotal"));
+        jedisPoolConfig.setMaxIdle(getIntPropertyFormEnv("redis.maxIdle"));
+        jedisPoolConfig.setMaxWaitMillis(getIntPropertyFormEnv("redis.maxWaitMillis"));
+        jedisPoolConfig.setTestOnBorrow(Boolean.parseBoolean(environment.getProperty("redis.testOnBorrow")));
         return jedisPoolConfig;
     }
 
     @Bean
     public JedisConnectionFactory getConnectionFactory() {
         JedisConnectionFactory connection = new JedisConnectionFactory();
-        connection.setHostName(host);
-        connection.setPort(port);
-        connection.setTimeout(timeout);
-        connection.setDatabase(database);
+        connection.setHostName(getPropertyFormEnv("redis.host"));
+        connection.setPort(getIntPropertyFormEnv("redis.port"));
+        connection.setTimeout(getIntPropertyFormEnv("redis.timeout"));
+        connection.setDatabase(getIntPropertyFormEnv("redis.database"));
         connection.setPoolConfig(getJedisPoolConfig());
         return connection;
     }

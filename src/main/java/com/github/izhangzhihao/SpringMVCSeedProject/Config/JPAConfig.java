@@ -1,10 +1,12 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -14,22 +16,40 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.beans.PropertyVetoException;
 import java.util.Properties;
 
+import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
+
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:db.properties") //导入资源文件
 public class JPAConfig {
-    @Value("${jdbc.userName}")
-    String user;
-    @Value("${jdbc.password}")
-    String password;
-    @Value("${jdbc.connectionURL}")
-    String url;
-    @Value("${jdbc.driverClass}")
-    String driverClass;
-    @Value("${jdbc.initialPoolSize}")
-    Integer initPoolSize;
-    @Value("${jdbc.maxPoolSize}")
-    Integer maxPoolSize;
+
+    @Autowired
+    private Environment environment;
+
+    private String getPropertyFormEnv(String propertyName) {
+        return environment.getProperty(propertyName);
+    }
+
+    private int getIntPropertyFormEnv(String propertyName) {
+        return Integer.parseInt(environment.getProperty(propertyName));
+    }
+
+    @Configuration
+    @Profile("development")
+    @PropertySource("classpath:development/db.properties")
+    static class Development {
+    }
+
+    @Configuration
+    @Profile("production")
+    @PropertySource("classpath:production/db.properties")
+    static class Production {
+    }
+
+    @Configuration
+    @Profile("test")
+    @PropertySource("classpath:test/db.properties")
+    static class Test {
+    }
 
     /**
      * 配置数据源
@@ -37,12 +57,12 @@ public class JPAConfig {
     @Bean
     public ComboPooledDataSource getDataSource() throws PropertyVetoException {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        dataSource.setUser(user);
-        dataSource.setPassword(password);
-        dataSource.setJdbcUrl(url);
-        dataSource.setDriverClass(driverClass);
-        dataSource.setInitialPoolSize(initPoolSize);
-        dataSource.setMaxPoolSize(maxPoolSize);
+        dataSource.setUser(getPropertyFormEnv("jdbc.userName"));
+        dataSource.setPassword(getPropertyFormEnv("jdbc.password"));
+        dataSource.setJdbcUrl(getPropertyFormEnv("jdbc.connectionURL"));
+        dataSource.setDriverClass(getPropertyFormEnv("jdbc.driverClass"));
+        dataSource.setInitialPoolSize(getIntPropertyFormEnv("jdbc.initialPoolSize"));
+        dataSource.setMaxPoolSize(getIntPropertyFormEnv("jdbc.maxPoolSize"));
         return dataSource;
     }
 
@@ -59,9 +79,9 @@ public class JPAConfig {
 
         Properties jpaProperties = new Properties();
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        jpaProperties.setProperty("hibernate.show_sql", "true");
-        jpaProperties.setProperty("hibernate.format_sql", "true");
-        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "validate"); //update validate
+        jpaProperties.setProperty("hibernate.show_sql", getPropertyFormEnv("hibernate.show_sql"));
+        jpaProperties.setProperty("hibernate.format_sql", getPropertyFormEnv("hibernate.format_sql"));
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto", getPropertyFormEnv("hibernate.hbm2ddl.auto")); //update validate
         jpaProperties.setProperty("cache.use_second_level_cache", "true");
         jpaProperties.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.SingletonEhCacheRegionFactory");
         jpaProperties.setProperty("cache.use_query_cache", "true");
@@ -92,7 +112,7 @@ public class JPAConfig {
         try {
             jpaTransactionManager.setEntityManagerFactory(getEntityManagerFactory().getObject());
         } catch (PropertyVetoException e) {
-            e.printStackTrace();
+            LogToDB(e);
         }
         return jpaTransactionManager;
     }
