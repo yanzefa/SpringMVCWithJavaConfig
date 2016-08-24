@@ -4,14 +4,12 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Controller;
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.User;
 import com.github.izhangzhihao.SpringMVCSeedProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Objects;
 
 import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
@@ -44,14 +42,13 @@ public class AccountController {
 	 * @param session
 	 * @return
 	 */
-	@Cacheable("springCache")
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public String Login(@RequestParam("UserName") String UserName,
 						@RequestParam("Password") String Password,
 						HttpSession session) {
 		String userName = UserName.trim();
 		User LoginUser = null;
-		if (userName != null && !Objects.equals(userName, "")) {
+		if (!Objects.equals(userName, "")) {
 			try {
 				LoginUser = userService.getById(userName);
 			} catch (Exception e) {
