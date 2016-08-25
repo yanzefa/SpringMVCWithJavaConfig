@@ -2,12 +2,8 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.izhangzhihao.SpringMVCSeedProject.Controller.LogController;
 import com.github.izhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Map;
 
@@ -15,12 +11,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class LogControllerTest extends BaseTest {
-    @Autowired
+   /*@Autowired
     private LogController logController;
 
     @Before
@@ -29,7 +23,7 @@ public class LogControllerTest extends BaseTest {
                 .standaloneSetup(logController)
                 .setViewResolvers(viewResolver)
                 .build();
-    }
+    }*/
 
 
     /**

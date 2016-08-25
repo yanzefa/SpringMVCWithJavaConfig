@@ -1,12 +1,8 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 
 
-import com.github.izhangzhihao.SpringMVCSeedProject.Controller.AccountController;
 import com.github.izhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AccountControllerTest extends BaseTest {
 
-    @Autowired
+    /*@Autowired
     private AccountController controller;
 
     @Before
@@ -25,7 +21,7 @@ public class AccountControllerTest extends BaseTest {
                 .standaloneSetup(controller)
                 .setViewResolvers(viewResolver)
                 .build();
-    }
+    }*/
 
     /**
      * 登陆页面的测试
