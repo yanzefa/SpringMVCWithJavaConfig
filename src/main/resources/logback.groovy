@@ -15,9 +15,9 @@ appender("stdOut", ConsoleAppender) {
 appender("db-classic-mysql", DBAppender) {
     connectionSource(DriverManagerConnectionSource) {
         driverClass = "com.mysql.cj.jdbc.Driver"
-        url = "jdbc:mysql://10.16.155.241:8081/SpringMVCSeedProject?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false"
+        url = "jdbc:mysql://127.0.0.1:3306/SpringMVCSeedProject?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false"
         user = "root"
-        password = "root"
+        password = ""
     }
 }
 logger("org", ERROR, ["db-classic-mysql"], false)
