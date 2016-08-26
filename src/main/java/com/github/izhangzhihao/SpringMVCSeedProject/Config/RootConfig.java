@@ -2,8 +2,6 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -25,12 +23,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
                 {@ComponentScan.Filter(
                         type = FilterType.ANNOTATION,
                         value = {EnableWebMvc.class, ControllerAdvice.class, Controller.class})})
-public class RootConfig extends SpringBootServletInitializer {
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(RootConfig.class);
-    }
+public class RootConfig {
 
     public static void main(String[] args) {
         SpringApplication.run(RootConfig.class, args);
