@@ -35,6 +35,19 @@ import java.util.concurrent.TimeUnit;
                         type = FilterType.ANNOTATION,
                         value = {ControllerAdvice.class, Controller.class})})
 public class WebConfig extends WebMvcConfigurerAdapter {
+
+    /**
+     * 设置首页
+     * @param registry
+     */
+    /*@Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        *//*registry.addViewController("/").setViewName("forward:/Log");
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);*//*
+        //registry.addRedirectViewController("/","/index,jsp");
+        super.addViewControllers(registry);
+    }*/
+
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -90,7 +103,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         //避免IE执行AJAX时,返回JSON出现下载文件
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setDefaultCharset(Charset.forName("UTF-8"));
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_PLAIN));
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         converters.add(byteArrayHttpMessageConverter);
         converters.add(stringHttpMessageConverter);
