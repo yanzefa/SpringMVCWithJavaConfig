@@ -3,6 +3,7 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.izhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
+import com.github.izhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.junit.Test;
 
 import java.util.Map;
@@ -67,7 +68,38 @@ public class LogControllerTest extends BaseTest {
      */
     @Test
     public void getLogByPageTest() throws Exception {
-        String contentAsString = mockMvc
+        //自动将json转为实体，避免了手动转换
+        PageResults pageResults = restTemplate
+                .getForObject("/Log/getLogByPage/pageNumber/" + 2 + "/pageSize/" + 10,
+                        PageResults.class);
+
+        int previousPage = pageResults.getPreviousPage();
+        int currentPage = pageResults.getCurrentPage();
+        int nextPage = pageResults.getNextPage();
+        int pageSize = pageResults.getPageSize();
+        int totalCount = pageResults.getTotalCount();
+        int pageCount = pageResults.getPageCount();
+
+        assertTrue(previousPage <= currentPage);
+        assertTrue(currentPage <= nextPage);
+        assertTrue(pageSize * pageCount >= totalCount);
+
+        int i = totalCount % pageSize;
+        if (i == 0) {
+            assertEquals(totalCount / pageSize, pageCount);
+        } else {
+            assertEquals(totalCount / pageSize + 1, pageCount);
+        }
+
+
+
+       /* Object forObject = restTemplate.getForObject(
+                uriHead+"/Log/getLogByPage/pageNumber/" + 2 + "/pageSize/" + 10
+                , Object.class
+        );
+        System.out.println(forObject);*/
+
+        /*String contentAsString = mockMvc
                 .perform(
                         get("/Log/getLogByPage/pageNumber/" + 2 + "/pageSize/" + 10)
                 )
@@ -96,6 +128,6 @@ public class LogControllerTest extends BaseTest {
             assertEquals(totalCount / pageSize, pageCount);
         } else {
             assertEquals(totalCount / pageSize + 1, pageCount);
-        }
+        }*/
     }
 }
