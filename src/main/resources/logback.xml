@@ -1,0 +1,45 @@
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <jmxConfigurator/>
+
+    <appender name="stdOut" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <appender name="db-classic-mysql" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>com.mysql.cj.jdbc.Driver</driverClass>
+            <url>jdbc:mysql://127.0.0.1:3306/SpringMVCSeedProject?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=false</url>
+            <user>root</user>
+            <password/>
+        </connectionSource>
+    </appender>
+
+    <logger name="org" level="ERROR" additivity="false">
+        <appender-ref ref="db-classic-mysql"/>
+    </logger>
+
+    <logger name="com" level="ERROR" additivity="false">
+        <appender-ref ref="db-classic-mysql"/>
+    </logger>
+
+    <logger name="java" level="ERROR" additivity="false">
+        <appender-ref ref="db-classic-mysql"/>
+    </logger>
+
+    <logger name="javax" level="ERROR" additivity="false">
+        <appender-ref ref="db-classic-mysql"/>
+    </logger>
+
+    <logger name="net" level="ERROR" additivity="false">
+        <appender-ref ref="db-classic-mysql"/>
+    </logger>
+
+    <!--TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF-->
+    <root level="ERROR">
+        <appender-ref ref="stdOut"/>
+    </root>
+</configuration>

@@ -38,10 +38,7 @@
 #    host: 127.0.0.1
 #    port: 6379
 #
-#  mvc:
-#    view:
-#      prefix: /WEB-INF/views/
-#      suffix: .jsp
+
 spring:
   profiles:
     active: development
@@ -49,3 +46,8 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+#  boot:
+#    admin:
+#      url: http://localhost:8090
+  application:
+    name: SpringMVCSeedProject
