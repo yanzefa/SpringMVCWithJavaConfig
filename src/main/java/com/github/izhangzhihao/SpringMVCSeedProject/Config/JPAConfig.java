@@ -78,7 +78,24 @@ public class JPAConfig {
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Properties jpaProperties = new Properties();
-        jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        jpaProperties.put(org.hibernate.cfg.Environment.DIALECT,"org.hibernate.dialect.MySQL5Dialect");
+        jpaProperties.put(org.hibernate.cfg.Environment.SHOW_SQL,getPropertyFormEnv("hibernate.show_sql"));
+        jpaProperties.put(org.hibernate.cfg.Environment.FORMAT_SQL,getPropertyFormEnv("hibernate.format_sql"));
+        jpaProperties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO,getPropertyFormEnv("hibernate.hbm2ddl.auto"));
+        jpaProperties.put(org.hibernate.cfg.Environment.USE_SECOND_LEVEL_CACHE,true);
+        jpaProperties.put(org.hibernate.cfg.Environment.CACHE_REGION_FACTORY,"org.hibernate.cache.SingletonEhCacheRegionFactory");
+        jpaProperties.put(org.hibernate.cfg.Environment.USE_QUERY_CACHE,true);
+        jpaProperties.put(org.hibernate.cfg.Environment.ISOLATION,2);
+        jpaProperties.put(org.hibernate.cfg.Environment.USE_IDENTIFIER_ROLLBACK,true);
+        jpaProperties.put(org.hibernate.cfg.Environment.C3P0_MAX_SIZE,20);
+        jpaProperties.put(org.hibernate.cfg.Environment.C3P0_MIN_SIZE,1);
+        jpaProperties.put(org.hibernate.cfg.Environment.C3P0_ACQUIRE_INCREMENT,2);
+        jpaProperties.put(org.hibernate.cfg.Environment.C3P0_IDLE_TEST_PERIOD,2000);
+        jpaProperties.put(org.hibernate.cfg.Environment.C3P0_TIMEOUT,2000);
+        jpaProperties.put(org.hibernate.cfg.Environment.C3P0_MAX_STATEMENTS,10);
+
+
+        /*jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         jpaProperties.setProperty("hibernate.show_sql", getPropertyFormEnv("hibernate.show_sql"));
         jpaProperties.setProperty("hibernate.format_sql", getPropertyFormEnv("hibernate.format_sql"));
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", getPropertyFormEnv("hibernate.hbm2ddl.auto")); //update validate
@@ -92,7 +109,7 @@ public class JPAConfig {
         jpaProperties.setProperty("c3p0.acquire_increment", "2");
         jpaProperties.setProperty("c3p0.idle_test_period", "2000");
         jpaProperties.setProperty("c3p0.timeout", "2000");
-        jpaProperties.setProperty("c3p0.max_statements", "10");
+        jpaProperties.setProperty("c3p0.max_statements", "10");*/
 
 
         localContainerEntityManagerFactoryBean.setJpaProperties(jpaProperties);
