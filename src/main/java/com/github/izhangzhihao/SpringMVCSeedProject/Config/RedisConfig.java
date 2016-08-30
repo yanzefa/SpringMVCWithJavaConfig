@@ -11,7 +11,7 @@ import redis.clients.jedis.JedisPoolConfig;
 
 
 @Configuration
-//@EnableRedisHttpSession
+//@EnableRedisHttpSession 开启此注释将不通过shiro存储session至redis
 public class RedisConfig {
 
     @Autowired
@@ -44,7 +44,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public JedisPoolConfig getJedisPoolConfig() {
+    public JedisPoolConfig jedisPoolConfig() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxTotal(getIntPropertyFormEnv("redis.maxTotal"));
         jedisPoolConfig.setMaxIdle(getIntPropertyFormEnv("redis.maxIdle"));
@@ -54,13 +54,13 @@ public class RedisConfig {
     }
 
     @Bean
-    public JedisConnectionFactory getConnectionFactory() {
+    public JedisConnectionFactory connectionFactory(JedisPoolConfig jedisPoolConfig) {
         JedisConnectionFactory connection = new JedisConnectionFactory();
         connection.setHostName(getPropertyFormEnv("redis.host"));
         connection.setPort(getIntPropertyFormEnv("redis.port"));
         connection.setTimeout(getIntPropertyFormEnv("redis.timeout"));
         connection.setDatabase(getIntPropertyFormEnv("redis.database"));
-        connection.setPoolConfig(getJedisPoolConfig());
+        connection.setPoolConfig(jedisPoolConfig);
         return connection;
     }
 
@@ -73,8 +73,8 @@ public class RedisConfig {
 
     @Bean
     @Primary
-    public StringRedisTemplate redisTemplate() {
-        StringRedisTemplate redisTemplate = new StringRedisTemplate(getConnectionFactory());
+    public StringRedisTemplate redisTemplate(JedisConnectionFactory connectionFactory) {
+        StringRedisTemplate redisTemplate = new StringRedisTemplate(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         return redisTemplate;

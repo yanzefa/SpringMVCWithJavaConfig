@@ -29,8 +29,4 @@ public class RootConfig {
         SpringApplication.run(RootConfig.class, args);
     }
 
-    /*@Bean
-    public DelegatingFilterProxy getDelegatingFilterProxy() {
-        return new DelegatingFilterProxy();
-    }*/
 }

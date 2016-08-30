@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Arrays.asList;
+
 /**
  * 相当于SpringMVC.xml
  */
@@ -101,11 +103,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter();
         stringHttpMessageConverter.setDefaultCharset(Charset.forName("UTF-8"));
-        stringHttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_PLAIN));
+        stringHttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
         //避免IE执行AJAX时,返回JSON出现下载文件
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setDefaultCharset(Charset.forName("UTF-8"));
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
 
         converters.add(byteArrayHttpMessageConverter);
         converters.add(stringHttpMessageConverter);

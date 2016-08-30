@@ -13,10 +13,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 import java.util.Properties;
-
-import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
 @Configuration
 @EnableTransactionManagement
@@ -55,7 +55,7 @@ public class JPAConfig {
      * 配置数据源
      */
     @Bean
-    public ComboPooledDataSource getDataSource() throws PropertyVetoException {
+    public ComboPooledDataSource dataSource() throws PropertyVetoException {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         dataSource.setUser(getPropertyFormEnv("jdbc.userName"));
         dataSource.setPassword(getPropertyFormEnv("jdbc.password"));
@@ -70,10 +70,10 @@ public class JPAConfig {
      * 配置 Hibernate 的 SessionFactory 实例: 通过 Spring 提供的 LocalSessionFactoryBean 进行配置
      */
     @Bean
-    public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() throws PropertyVetoException {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) throws PropertyVetoException {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         //配置数据源属性
-        localContainerEntityManagerFactoryBean.setDataSource(getDataSource());
+        localContainerEntityManagerFactoryBean.setDataSource(dataSource);
 
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
@@ -124,13 +124,9 @@ public class JPAConfig {
      * 配置 Spring 事务管理器
      */
     @Bean
-    public PlatformTransactionManager getTransactionManager() {
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        try {
-            jpaTransactionManager.setEntityManagerFactory(getEntityManagerFactory().getObject());
-        } catch (PropertyVetoException e) {
-            LogToDB(e);
-        }
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
         return jpaTransactionManager;
     }
 }
