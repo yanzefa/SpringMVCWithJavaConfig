@@ -2,15 +2,36 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Config;
 
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.Filter;
+import javax.servlet.*;
+import java.util.EnumSet;
 
 /**
  * 相当于web.xml
  */
-public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class WebAppInitializer
+        extends AbstractAnnotationConfigDispatcherServletInitializer {
 
+
+    /*@Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.setInitParameter("spring.profiles.default", "development");
+        servletContext.setInitParameter("spring.profiles.active", "development");
+        servletContext.setInitParameter("targetFilterLifecycle", "false");
+        super.onStartup(servletContext);
+    }
+
+    @Override
+    protected FilterRegistration.Dynamic registerServletFilter(ServletContext servletContext, Filter filter) {
+        servletContext
+                .addFilter("shiroFilter", DelegatingFilterProxy.class)
+                .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE)
+                        , false
+                        , "/");
+        return super.registerServletFilter(servletContext, filter);
+    }*/
 
     /**
      * Specify {@link Configuration @Configuration}
@@ -60,16 +81,17 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
      * @return an array of filters or {@code null}
      * @see #registerServletFilter(ServletContext, Filter)
      */
-    @Override
+    /*@Override
     protected Filter[] getServletFilters() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter("UTF-8", true);
 
-        /*DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
-        delegatingFilterProxy.setTargetFilterLifecycle(true);*/
+        //配置shiro
+        *//*DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
+        delegatingFilterProxy.setTargetFilterLifecycle(true);*//*
 
         OpenEntityManagerInViewFilter openEntityManagerInViewFilter = new OpenEntityManagerInViewFilter();
 
         //return new Filter[]{characterEncodingFilter, delegatingFilterProxy, openEntityManagerInViewFilter};
         return new Filter[]{characterEncodingFilter, openEntityManagerInViewFilter};
-    }
+    }*/
 }

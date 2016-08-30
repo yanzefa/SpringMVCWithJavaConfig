@@ -39,6 +39,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 def SpringBootVersion = "1.4.0.RELEASE"
 def HibernateVersion = "5.2.2.Final"
+def ShiroVersion = "1.2.6"
 
 repositories {
     mavenLocal()
@@ -94,6 +95,12 @@ dependencies {
             //C3P0
             "com.mchange:c3p0:0.9.5.2",
             "org.hibernate:hibernate-c3p0:${HibernateVersion}",
+
+            //shiro
+            "org.apache.shiro:shiro-core:${ShiroVersion}",
+            "org.apache.shiro:shiro-spring:${ShiroVersion}",
+            "org.apache.shiro:shiro-web:${ShiroVersion}",
+            "org.apache.shiro:shiro-ehcache:${ShiroVersion}",
 
             //Lombok
             "org.projectlombok:lombok:1.16.10",
