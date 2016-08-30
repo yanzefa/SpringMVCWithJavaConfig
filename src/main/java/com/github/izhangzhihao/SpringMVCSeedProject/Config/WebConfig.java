@@ -107,7 +107,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         //避免IE执行AJAX时,返回JSON出现下载文件
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setDefaultCharset(Charset.forName("UTF-8"));
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(asList(MediaType.APPLICATION_JSON,MediaType.TEXT_HTML));
 
         converters.add(byteArrayHttpMessageConverter);
         converters.add(stringHttpMessageConverter);

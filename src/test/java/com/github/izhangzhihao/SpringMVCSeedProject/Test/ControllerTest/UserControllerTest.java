@@ -1,11 +1,9 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 
-import com.github.izhangzhihao.SpringMVCSeedProject.Model.User;
 import com.github.izhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import org.junit.Test;
 
 import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.StringUtils.getRandomUUID;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,8 +32,8 @@ public class UserControllerTest extends BaseTest {
     @Test
     public void getUserExistTest() throws Exception {
         //获取单个对象并自动将json转化为对应对象，可惜不能测试http status
-        User admin = restTemplate.getForObject("/User/getUser/admin", User.class);
-        assertNotNull(admin);
+        //User admin = restTemplate.getForObject("/User/getUser/admin", User.class);
+        //assertNotNull(admin);
 
         mockMvc.perform(get("/User/getUser/admin"))
                 .andDo(print())
