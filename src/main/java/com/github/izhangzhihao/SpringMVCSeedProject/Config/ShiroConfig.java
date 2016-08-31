@@ -52,16 +52,16 @@ public class ShiroConfig {
 
     @Bean
     public SimpleCookie rememberMeCookie() {
-        SimpleCookie cookie = new SimpleCookie();
+        SimpleCookie cookie = new SimpleCookie("rememberMe");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(2592000);
         return cookie;
     }
 
     @Bean
-    public CookieRememberMeManager rememberMeManager() {
+    public CookieRememberMeManager rememberMeManager(SimpleCookie rememberMeCookie) {
         CookieRememberMeManager rememberMeManager = new CookieRememberMeManager();
-        rememberMeManager.setCookie(rememberMeCookie());
+        rememberMeManager.setCookie(rememberMeCookie);
         rememberMeManager.setCipherKey(decode("5AvVhmFLUs0KTA3Kprsdag=="));
         return rememberMeManager;
     }
@@ -109,13 +109,14 @@ public class ShiroConfig {
 
     @Bean
     public DefaultWebSessionManager sessionManager(CachingShiroSessionDao cachingShiroSessionDao,
-                                                   ShiroSessionListener shiroSessionListener) {
+                                                   ShiroSessionListener shiroSessionListener,
+                                                   ShiroSessionFactory sessionFactory) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setGlobalSessionTimeout(1800000);
         sessionManager.setDeleteInvalidSessions(false);
         sessionManager.setSessionValidationSchedulerEnabled(false);
         sessionManager.setSessionValidationInterval(1800000);
-        sessionManager.setSessionFactory(sessionFactory());
+        sessionManager.setSessionFactory(sessionFactory);
         sessionManager.setSessionDAO(cachingShiroSessionDao);
         sessionManager.setSessionIdCookie(new SimpleCookie("SHRIOSESSIONID"));
         sessionManager.setSessionIdCookieEnabled(true);
@@ -167,7 +168,8 @@ public class ShiroConfig {
         map.put("/login", "anon");
         map.put("/assets/**", "anon");
         map.put("/app/**", "anon");
-        map.put("/**", "authc");
+        map.put("/**", "authc");//需要登陆
+        //map.put("/**", "user");//通过记住我登陆
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;
