@@ -44,8 +44,8 @@ public class LogController {
      *
      * @return json数据
      */
-    //@RequestMapping(value = "/getLogInfo", method = RequestMethod.GET)
-    @GetMapping("/getLogInfo")
+    //@RequestMapping(value = "/LogInfo", method = RequestMethod.GET)
+    @GetMapping("/LogInfo")
     @ResponseBody
     @Cacheable(value = "getLogInfo", keyGenerator = "customKeyGenerator")
     public Map<String, Long> getLogInfo() {
@@ -71,8 +71,8 @@ public class LogController {
      * @param pageSize   每页大小
      * @return json数据
      */
-    //@RequestMapping(value = "/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
-    @GetMapping("/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}")
+    //@RequestMapping(value = "/LogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
+    @GetMapping("/LogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}")
     @ResponseBody
     @Cacheable(value = "getLogByPage", keyGenerator = "customKeyGenerator")
     public PageResults<Log> getLogByPage(@PathVariable int pageNumber,

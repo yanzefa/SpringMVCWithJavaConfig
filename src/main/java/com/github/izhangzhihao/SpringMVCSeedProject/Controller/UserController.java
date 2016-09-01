@@ -27,7 +27,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/getUser/{userName}")
+    @GetMapping("/User/{userName}")
     @ApiOperation(
             value = "根据id获取用户信息,不包含密码",
             response = User.class
@@ -43,7 +43,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/createUser/userName/{userName}/passWord/{passWord}")
+    @PostMapping("/User/userName/{userName}/passWord/{passWord}")
     @ApiOperation(
             value = "创建用户",
             response = User.class
@@ -63,7 +63,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/updateUser/userName/{userName}/passWord/{passWord}")
+    @PutMapping("/User/userName/{userName}/passWord/{passWord}")
     @ApiOperation(
             value = "更新用户",
             response = User.class
@@ -83,7 +83,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/deleteUser/{id}")
+    @DeleteMapping("/User/{id}")
     @ApiOperation(
             value = "删除用户",
             response = User.class

@@ -9,7 +9,7 @@
                 function Paging(pageNumber, pageSize) {
                     $.ajax({
                         type: "Get",
-                        url: "/Log/getLogByPage/pageNumber/" + pageNumber + "/pageSize/" + pageSize,
+                        url: "/Log/LogByPage/pageNumber/" + pageNumber + "/pageSize/" + pageSize,
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (data) {
@@ -224,7 +224,7 @@
     var infoData;
     $.ajax({
         type: "Get",
-        url: "/Log/getLogInfo",
+        url: "/Log/LogInfo",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
