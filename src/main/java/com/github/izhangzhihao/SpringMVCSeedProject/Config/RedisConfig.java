@@ -64,19 +64,24 @@ public class RedisConfig {
         return connection;
     }
 
-    /*@Bean
-    public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(getConnectionFactory());
-        return redisTemplate;
-    }*/
-
     @Bean
     @Primary
-    public StringRedisTemplate redisTemplate(JedisConnectionFactory connectionFactory) {
+    public StringRedisTemplate redisTemplate(JedisConnectionFactory connectionFactory,
+                                             StringRedisSerializer stringRedisSerializer,
+                                             JdkSerializationRedisSerializer jdkSerializationRedisSerializer) {
         StringRedisTemplate redisTemplate = new StringRedisTemplate(connectionFactory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
+        redisTemplate.setKeySerializer(stringRedisSerializer);
+        redisTemplate.setValueSerializer(jdkSerializationRedisSerializer);
         return redisTemplate;
+    }
+
+    @Bean
+    public StringRedisSerializer stringRedisSerializer() {
+        return new StringRedisSerializer();
+    }
+
+    @Bean
+    public JdkSerializationRedisSerializer jdkSerializationRedisSerializer() {
+        return new JdkSerializationRedisSerializer();
     }
 }
