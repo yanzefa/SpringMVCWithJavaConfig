@@ -75,15 +75,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 );
     }
 
-    /*@Bean
-    public ServletContextTemplateResolver templateResolver(){
-        ServletContextTemplateResolver templateResolver=new ServletContextTemplateResolver();
-        templateResolver.setPrefix("/WEB-INF/views/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML5");
-        return templateResolver;
-    }*/
-
     /**
      * {@inheritDoc}
      * <p>This implementation is empty.
@@ -107,7 +98,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         //避免IE执行AJAX时,返回JSON出现下载文件
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setDefaultCharset(Charset.forName("UTF-8"));
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(asList(MediaType.APPLICATION_JSON,MediaType.TEXT_HTML));
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(asList(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML));
 
         converters.add(byteArrayHttpMessageConverter);
         converters.add(stringHttpMessageConverter);
