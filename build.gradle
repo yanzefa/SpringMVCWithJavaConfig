@@ -11,7 +11,7 @@ buildscript {
         maven { url "https://repo.spring.io/libs-snapshot" }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
     }
 }
 
@@ -37,9 +37,9 @@ configurations {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-def SpringBootVersion = "1.4.0.RELEASE"
+def SpringBootVersion = "1.4.1.RELEASE"
 def HibernateVersion = "5.2.2.Final"
-def ShiroVersion = "1.2.6"
+def ShiroVersion = "1.3.2"
 
 repositories {
     mavenLocal()
@@ -66,8 +66,8 @@ dependencies {
             "io.springfox:springfox-swagger-ui:2.5.0",
 
             //Spring-Session
-            "org.springframework.session:spring-session:1.2.1.RELEASE",
-            "org.springframework.data:spring-data-redis:1.7.2.RELEASE",
+            "org.springframework.session:spring-session:1.2.2.RELEASE",
+            "org.springframework.data:spring-data-redis:1.7.3.RELEASE",
 
             //jedis
             "redis.clients:jedis:2.9.0",
@@ -83,14 +83,14 @@ dependencies {
             "org.apache.commons:commons-lang3:3.4",//深拷贝
 
             // MySQL
-            "mysql:mysql-connector-java:6.0.2",
+            "mysql:mysql-connector-java:6.0.4",
 
             //Hibernate
             "org.hibernate:hibernate-core:${HibernateVersion}",
             "org.hibernate:hibernate-validator:5.2.4.Final",
 
             //ehcache
-            "org.ehcache:ehcache:3.1.0",
+            "org.ehcache:ehcache:3.1.2",
             "org.hibernate:hibernate-ehcache:${HibernateVersion}",
 
             //C3P0
