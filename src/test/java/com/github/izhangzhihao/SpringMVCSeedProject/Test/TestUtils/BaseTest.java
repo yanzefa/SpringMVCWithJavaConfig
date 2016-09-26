@@ -6,6 +6,7 @@ import com.github.izhangzhihao.SpringMVCSeedProject.Config.RedisConfig;
 import com.github.izhangzhihao.SpringMVCSeedProject.Config.RootConfig;
 import com.github.izhangzhihao.SpringMVCSeedProject.Config.WebConfig;
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.User;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,15 +40,20 @@ import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.StringUtils.get
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Autowired
-    private WebApplicationContext context;
+    protected DefaultWebSecurityManager securityManager;
+
+    @Autowired
+    protected WebApplicationContext context;
 
     protected MockMvc mockMvc;
+
+    protected MockHttpSession mockHttpSession;
 
     @Autowired
     protected TestRestTemplate restTemplate;
 
     @LocalServerPort
-    private int port;
+    protected int port;
 
 
     /*protected InternalResourceViewResolver viewResolver;
@@ -60,6 +67,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Before
     public void setupMockMvc() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        mockHttpSession = new MockHttpSession();
     }
 
     @Test

@@ -11,6 +11,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -101,8 +102,14 @@ public class AccountController {
         ImageIO.write(bim, "JPEG", response.getOutputStream());
     }
 
-    @RequestMapping("/LogOut")
-    public void LogOut() {
+    /**
+     * 退出登录
+     *
+     * @return
+     */
+    @GetMapping("/LogOut")
+    public String LogOut() {
         SecurityUtils.getSubject().logout();
+        return "redirect:/Account/Login";
     }
 }
