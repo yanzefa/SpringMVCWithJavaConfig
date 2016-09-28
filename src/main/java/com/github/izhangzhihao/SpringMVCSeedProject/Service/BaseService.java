@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -20,8 +22,13 @@ import java.util.List;
 @SuppressWarnings({"unchecked", "unused", "SpringJavaAutowiredMembersInspection"})
 @Transactional
 class BaseService<T> {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Autowired
     private BaseRepository<T> baseRepository;
+
     private Class<T> modelClass;
 
     BaseService() {

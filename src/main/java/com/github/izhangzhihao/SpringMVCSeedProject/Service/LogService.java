@@ -11,9 +11,6 @@ import javax.persistence.PersistenceContext;
 @Service
 public class LogService extends BaseService<Log> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     public Long getExceptionCountByCallerFilename(String callerFilename){
         Query query = new Query(entityManager);
         return (Long) query.from(Log.class)
