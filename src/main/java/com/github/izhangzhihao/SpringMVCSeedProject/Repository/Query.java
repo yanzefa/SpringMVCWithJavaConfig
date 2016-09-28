@@ -2,7 +2,6 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Repository;
 
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.hibernate.query.criteria.internal.predicate.*;
@@ -23,7 +22,6 @@ import static com.mysql.cj.core.util.StringUtils.isNullOrEmpty;
  * 封装JPA CriteriaBuilder查询条件
  */
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess", "FieldCanBeLocal"})
-@NoArgsConstructor
 public class Query implements Serializable {
 
     private static final long serialVersionUID = 3366932251068926942L;
@@ -129,6 +127,12 @@ public class Query implements Serializable {
         this.criteriaBuilder = this.entityManager.getCriteriaBuilder();
         this.predicates = new ArrayList();
         this.orders = new ArrayList();
+    }
+
+    /**
+     * 构造函数
+     */
+    private Query() {
     }
 
     /**
