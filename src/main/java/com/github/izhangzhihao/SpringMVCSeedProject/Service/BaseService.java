@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * BaseService作为所有Service的基类，需要使用的话，需要先编写一个继承自此类的类
@@ -21,6 +22,7 @@ import java.util.List;
  */
 @SuppressWarnings({"unchecked", "unused", "SpringJavaAutowiredMembersInspection"})
 @Transactional
+@Service
 class BaseService<T> {
 
     @PersistenceContext
